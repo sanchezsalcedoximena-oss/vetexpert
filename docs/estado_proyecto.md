@@ -1,14 +1,49 @@
-# Estado del Proyecto
+# Estado del Proyecto — VetExpert
 
-## Completado
-- Arquitectura inicial
+## Estado General
+Proyecto iniciado desde cero.
 
-## En progreso
-- Autenticación
+## Arquitectura
+⏳ Pendiente
 
-## Pendiente
-- Dashboard
-- Clientes
-- Mascotas
-- Citas
-- Reportes
+## Frontend
+⏳ Pendiente
+
+## Backend
+⏳ Pendiente
+
+## Base de Datos
+⏳ Pendiente
+
+## Autenticación
+⏳ Pendiente
+
+## Landing Page
+⏳ Pendiente
+
+## Dashboard
+⏳ Pendiente
+
+## Clientes
+⏳ Pendiente
+
+## Mascotas
+⏳ Pendiente
+
+## Citas
+⏳ Pendiente
+
+## Historia Clínica
+⏳ Pendiente
+
+## Reportes
+⏳ Pendiente
+
+## Configuración
+⏳ Pendiente
+
+## Mantenimiento
+⏳ Pendiente
+
+## Despliegue
+⏳ Pendiente

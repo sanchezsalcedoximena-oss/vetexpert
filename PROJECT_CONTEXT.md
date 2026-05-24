@@ -68,3 +68,11 @@ Backend:
 
 Base de datos:
 - Supabase PostgreSQL
+
+## Reglas para IA
+
+- NO ejecutar npm audit automáticamente.
+- NO optimizar dependencias fuera del alcance solicitado.
+- NO actualizar versiones innecesariamente.
+- NO modificar fases futuras.
+- Mantener foco únicamente en la fase actual.
