@@ -97,7 +97,11 @@ Completado:
 * Fase 03 - Landing Page
 * Fase 04 - Acceso y Dashboard Base
 
-Proxima fase:
+Siguiente fase tecnica:
+
+* Fase 04.1 - Seed Admin Inicial
+
+Proxima fase funcional:
 
 * Fase 05 - Gestion clientes
 
