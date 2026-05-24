@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fondo: 180 29% 97%;
+  --superficie: 0 0% 100%;
+  --borde: 186 18% 84%;
+  --texto: 194 35% 14%;
+  --primario: 174 72% 34%;
+  --secundario: 36 88% 58%;
+  --exito: 142 56% 38%;
+}
+
+.dark {
+  --fondo: 194 35% 9%;
+  --superficie: 192 29% 13%;
+  --borde: 190 20% 24%;
+  --texto: 180 22% 92%;
+  --primario: 174 68% 46%;
+  --secundario: 36 88% 62%;
+  --exito: 142 56% 48%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: hsl(var(--fondo));
+  color: hsl(var(--texto));
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
