@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { AuthModule } from "./auth/auth.module";
 import { CitasModule } from "./citas/citas.module";
 import { ClientesModule } from "./clientes/clientes.module";
@@ -13,6 +14,10 @@ import { VacunasModule } from "./vacunas/vacunas.module";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
+
     PrismaModule,
     AuthModule,
     UsuariosModule,
