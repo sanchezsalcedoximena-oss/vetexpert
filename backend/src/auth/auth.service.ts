@@ -63,6 +63,29 @@ export class AuthService {
     return this.crearSesion(this.mapearUsuario(usuario));
   }
 
+  async loginCliente(dto: LoginDto) {
+    const usuario = await this.prisma.usuario.findFirst({
+      where: {
+        correo: dto.correo.toLowerCase(),
+        tipoUsuario: "CLIENTE",
+        rol: Rol.CLIENTE,
+        activo: true,
+        eliminadoEn: null
+      }
+    });
+
+    if (!usuario || !(await compare(dto.contrasena, usuario.passwordHash))) {
+      throw new UnauthorizedException("Credenciales de cliente invalidas.");
+    }
+
+    await this.prisma.usuario.update({
+      where: { id: usuario.id },
+      data: { ultimoAccesoEn: new Date() }
+    });
+
+    return this.crearSesion(this.mapearUsuario(usuario));
+  }
+
   async loginGoogleStaff(dto: GoogleMockDto) {
     const usuario = await this.prisma.usuario.findFirst({
       where: {

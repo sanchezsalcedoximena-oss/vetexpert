@@ -26,6 +26,11 @@ export class AuthController {
     return this.authService.loginStaff(dto);
   }
 
+  @Post("clientes/login")
+  loginCliente(@Body() dto: LoginDto) {
+    return this.authService.loginCliente(dto);
+  }
+
   @Post("staff/google")
   loginGoogleStaff(@Body() dto: GoogleMockDto) {
     return this.authService.loginGoogleStaff(dto);

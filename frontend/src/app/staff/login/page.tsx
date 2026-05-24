@@ -1,5 +1,5 @@
 import { AccesoForm } from "@/modules/auth/components/AccesoForm";
 
-export default function LoginPage() {
+export default function StaffLoginPage() {
   return <AccesoForm tipo="staff" />;
 }

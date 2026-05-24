@@ -4,9 +4,7 @@
 
 Proyecto funcionando correctamente en entorno local.
 
----
-
-# Backend
+## Backend
 
 * NestJS funcionando.
 * Prisma ORM configurado.
@@ -15,35 +13,32 @@ Proyecto funcionando correctamente en entorno local.
 * Prisma Client generado correctamente.
 * API funcionando en puerto 4000.
 
----
-
-# Frontend
+## Frontend
 
 * Next.js funcionando.
 * TailwindCSS configurado.
-* Landing pública funcional.
+* Landing publica funcional.
 * Frontend conectado correctamente al backend.
+* Dashboard base protegido funcionando.
+* Sidebar moderna responsive implementada.
+* Dark mode disponible en acceso y dashboard.
 
----
-
-# Autenticación implementada
+## Autenticacion implementada
 
 * Login staff JWT.
+* Login cliente JWT.
 * Refresh token.
-* Roles:
-
-  * ADMIN
-  * SECRETARIA
-  * VETERINARIO
-  * CLIENTE
+* Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`, `CLIENTE`.
 * Registro cliente.
-* Recuperación de contraseña preparada.
-* Guards JWT.
+* Recuperacion de contrasena preparada.
+* Guards JWT backend.
+* Guards frontend para rutas privadas.
 * Hash bcryptjs.
+* Persistencia JWT frontend.
+* Interceptor Axios con refresh automatico.
+* Logout frontend.
 
----
-
-# Landing Page implementada
+## Landing Page implementada
 
 * Hero section.
 * Servicios.
@@ -55,79 +50,63 @@ Proyecto funcionando correctamente en entorno local.
 * Formulario contacto funcional.
 * Persistencia mensajes PostgreSQL.
 
----
+## Dashboard Base implementado
 
-# Prisma
+* Ruta `/dashboard` protegida.
+* Rutas base protegidas `/dashboard/clientes`, `/dashboard/mascotas`, `/dashboard/citas`.
+* Layout interno con sidebar, header, avatar y breadcrumbs.
+* Dark mode persistente.
+* Vista responsive mobile/desktop.
+* Logout funcional.
+
+## Prisma
 
 Schema ubicado en:
 
+```text
 database/schema/schema.prisma
+```
 
 Migraciones aplicadas:
 
-* 20260524000000_fase_02_auth
-* 20260524010000_fase_03_landing_contacto
+* `20260524000000_fase_02_auth`
+* `20260524010000_fase_03_landing_contacto`
 
----
+## Endpoints activos
 
-# Endpoints activos
+Auth:
 
-## Auth
+* `POST /api/auth/staff/login`
+* `POST /api/auth/clientes/login`
+* `POST /api/auth/staff/google`
+* `POST /api/auth/clientes/registro`
+* `POST /api/auth/refresh`
+* `POST /api/auth/recuperar`
+* `GET /api/auth/perfil`
 
-* POST /api/auth/staff/login
-* POST /api/auth/staff/google
-* POST /api/auth/clientes/registro
-* POST /api/auth/refresh
-* POST /api/auth/recuperar
-* GET /api/auth/perfil
+Contacto:
 
-## Contacto
+* `POST /api/contacto/mensajes`
 
-* POST /api/contacto/mensajes
+## Estado roadmap
 
----
-
-# Problemas resueltos
-
-* Error Prisma schema location.
-* Error múltiples node_modules NestJS.
-* Error ConfigModule.forRoot.
-* Error Prisma Client no generado.
-* Error conexión frontend/backend.
-* Error migración tabla MensajeContacto.
-
----
-
-# Estado roadmap
-
-## Completado
+Completado:
 
 * Fase 01
-* Fase 02 — Autenticación
-* Fase 03 — Landing Page
+* Fase 02 - Autenticacion
+* Fase 03 - Landing Page
+* Fase 04 - Acceso y Dashboard Base
 
-## Próxima fase
+Proxima fase:
 
-Fase 04:
+* Fase 05 - Gestion clientes
 
-* Seed Prisma
-* Usuario ADMIN inicial
-* Login real completo
-* Persistencia sesión
-* Guards frontend
-* Layout dashboard base
+## Estado UX/UI
 
----
-
-# Estado UX/UI
-
-Base visual funcional implementada.
+Base visual funcional implementada con landing publica y dashboard moderno.
 
 Pendiente:
 
-* UX/UI premium
-* dashboard moderno
-* sidebar profesional
-* animaciones avanzadas
-* charts
-* mejoras responsive avanzadas
+* Animaciones avanzadas.
+* Charts.
+* Mejoras responsive avanzadas por modulo.

@@ -1,5 +1,5 @@
 import { RegistroClienteForm } from "@/modules/auth/components/RegistroClienteForm";
 
-export default function RegistroPage() {
+export default function PortalRegistroPage() {
   return <RegistroClienteForm />;
 }

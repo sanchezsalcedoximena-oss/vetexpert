@@ -1,161 +1,87 @@
 # VetExpert
 
-Sistema web veterinario profesional desarrollado con:
+Sistema web veterinario profesional desarrollado con Next.js, NestJS, PostgreSQL, Prisma ORM, TailwindCSS y TypeScript estricto.
 
-* Next.js
-* NestJS
-* PostgreSQL
-* Prisma ORM
-* TailwindCSS
-* TypeScript
+## Objetivo
 
----
+Construir un sistema moderno y escalable para clinicas veterinarias con landing publica, autenticacion, dashboard interno y modulos progresivos para clientes, mascotas, citas, historia clinica, vacunas, reportes y portal cliente.
 
-# Objetivo
+## Arquitectura
 
-Desarrollar un sistema moderno y escalable para clínicas veterinarias que permita:
+* Clean Architecture.
+* Monolito modular.
+* Frontend separado del backend.
+* Componentes reutilizables.
+* TypeScript estricto.
 
-* Gestión de citas
-* Gestión de mascotas
-* Gestión de clientes
-* Historia clínica veterinaria
-* Vacunas
-* Reportes
-* Portal cliente
+## Desarrollo local
 
----
+Frontend:
 
-# Arquitectura
+```bash
+npm run dev:frontend
+```
 
-* Clean Architecture
-* Monolito modular
-* Frontend separado backend
-* TypeScript estricto
+URL: `http://localhost:3000`
 
----
+Backend:
 
-# Stack Tecnológico
+```bash
+npm run dev:backend
+```
 
-## Frontend
+URL: `http://localhost:4000`
 
-* Next.js
-* TailwindCSS
-* Framer Motion
-* Axios
+API prefix: `/api`
 
-## Backend
-
-* NestJS
-* Prisma ORM
-* JWT
-* bcryptjs
-
-## Base de datos
-
-* PostgreSQL
-
----
-
-# Desarrollo local
-
-## Frontend
-
-Puerto:
-3000
-
-URL:
-http://localhost:3000
-
-## Backend
-
-Puerto:
-4000
-
-URL:
-http://localhost:4000
-
-API Prefix:
-api
-
----
-
-# Prisma
+## Prisma
 
 Schema principal:
 
+```text
 database/schema/schema.prisma
+```
 
----
+## Funcionalidades implementadas
 
-# Funcionalidades implementadas
+Fase 01:
 
-## Fase 01
+* Estructura monolito modular.
+* Arquitectura base frontend/backend.
 
-* Estructura monolito modular
-* Arquitectura base
-* Configuración frontend/backend
+Fase 02 - Autenticacion:
 
-## Fase 02 — Autenticación
+* Login staff JWT.
+* Login cliente JWT.
+* Refresh token.
+* Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`, `CLIENTE`.
+* Registro cliente.
+* Recuperacion de contrasena preparada.
+* Guards JWT.
+* Hash con `bcryptjs`.
 
-* Login staff JWT
-* Refresh token
-* Roles:
+Fase 03 - Landing Page:
 
-  * ADMIN
-  * SECRETARIA
-  * VETERINARIO
-  * CLIENTE
-* Registro cliente
-* Recuperación contraseña
-* Guards JWT
-* bcryptjs
-* Prisma ORM integrado
+* Landing publica.
+* Hero, servicios, promociones, sobre nosotros, contacto y footer.
+* WhatsApp flotante.
+* Formulario de contacto conectado al backend.
+* Persistencia de mensajes en PostgreSQL.
 
-## Fase 03 — Landing Page
+Fase 04 - Acceso y Dashboard Base:
 
-* Landing pública
-* Hero section
-* Servicios
-* Promociones
-* Sobre nosotros
-* Contacto
-* Footer
-* WhatsApp flotante
-* Formulario contacto
-* Persistencia mensajes PostgreSQL
+* Login visual staff en `/staff/login`.
+* Login visual cliente en `/portal/login`.
+* Registro cliente en `/portal/registro`.
+* Persistencia JWT en frontend.
+* Interceptor Axios con refresh token automatico.
+* Guards frontend para `/dashboard`.
+* Logout.
+* Dashboard base protegido.
+* Sidebar moderna responsive.
+* Header con avatar, breadcrumbs y dark mode.
+* Rutas protegidas base: `/dashboard`, `/dashboard/clientes`, `/dashboard/mascotas`, `/dashboard/citas`.
 
----
+## Estado actual
 
-# Estructura
-
-/docs
-/tasks
-/memory
-/prompts
-/frontend
-/backend
-/database
-
----
-
-# Estado actual
-
-Proyecto funcionando correctamente en entorno local.
-
-Frontend y backend conectados correctamente.
-
-Landing y autenticación base implementadas.
-
----
-
-# Próximas fases
-
-* Seed admin inicial
-* Login real completo
-* Dashboard administrativo
-* Gestión clientes
-* Gestión mascotas
-* Gestión citas
-* Portal cliente
-* Reportes
-* UX/UI premium
+Proyecto funcionando en entorno local. Landing publica, contacto, autenticacion y dashboard base implementados.

@@ -61,7 +61,7 @@ export default function RecuperarPage() {
           Enviar instrucciones
         </Button>
       </form>
-      <Link className="mt-4 inline-block text-sm font-semibold text-primario hover:underline" href="/login">
+      <Link className="mt-4 inline-block text-sm font-semibold text-primario hover:underline" href="/staff/login">
         Volver al login
       </Link>
     </AuthShell>
