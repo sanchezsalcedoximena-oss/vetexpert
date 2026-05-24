@@ -4,6 +4,7 @@ import { AuthModule } from "./auth/auth.module";
 import { CitasModule } from "./citas/citas.module";
 import { ClientesModule } from "./clientes/clientes.module";
 import { ConfiguracionModule } from "./configuracion/configuracion.module";
+import { ContactoModule } from "./contacto/contacto.module";
 import { ConsultasModule } from "./consultas/consultas.module";
 import { MantenimientoModule } from "./mantenimiento/mantenimiento.module";
 import { MascotasModule } from "./mascotas/mascotas.module";
@@ -19,6 +20,7 @@ import { VacunasModule } from "./vacunas/vacunas.module";
     }),
 
     PrismaModule,
+    ContactoModule,
     AuthModule,
     UsuariosModule,
     ClientesModule,

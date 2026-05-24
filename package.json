@@ -22,5 +22,10 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  
+  "prisma": {
+  "schema": "database/schema/schema.prisma"
   }
+  
 }

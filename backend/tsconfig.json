@@ -5,30 +5,25 @@
 
     "declaration": true,
     "sourceMap": true,
-    "outDir": "./dist", 
+
+    "outDir": "./dist",
     "rootDir": "./src",
-
-    "baseUrl": "./",
-
+    
     "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "strictBindCallApply": true, 
-    "forceConsistentCasingInFileNames": true, 
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    
+
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
-    "allowSyntheticDefaultImports": true, 
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
 
-    "skipLibCheck": true, 
-    "incremental": true,
-
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "skipLibCheck": true,
+    "incremental": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

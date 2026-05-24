@@ -1,20 +1,6 @@
-# Dependencias
 node_modules/
-
-# Builds
+.env
+.env.local
 .next/
 dist/
 coverage/
-
-# Entorno
-.env
-.env.*
-!.env.example
-
-# Sistema
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-npm-debug.log*
