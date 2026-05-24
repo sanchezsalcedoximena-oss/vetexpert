@@ -82,6 +82,26 @@ Fase 04 - Acceso y Dashboard Base:
 * Header con avatar, breadcrumbs y dark mode.
 * Rutas protegidas base: `/dashboard`, `/dashboard/clientes`, `/dashboard/mascotas`, `/dashboard/citas`.
 
+Fase 04.1 - Seed Admin Inicial:
+
+* Script `npm run prisma:seed`.
+* Admin inicial `admin@vetexpert.com`.
+* Password inicial `Admin123*`.
+* Rol `ADMIN`.
+* Password hasheado con `bcryptjs`.
+* Seed idempotente para evitar duplicados.
+
+Fase 05 - Gestion de Clientes:
+
+* CRUD backend en `/api/clientes`.
+* Guards JWT y roles `ADMIN`, `SECRETARIA`.
+* Paginacion, busqueda, filtros y soft delete.
+* Validaciones Peru para DNI y celular.
+* Vista `/dashboard/clientes`.
+* Tabla responsive, buscador, filtros y paginacion.
+* Crear, editar, eliminar y ver detalle.
+* Skeleton loaders, toast notifications y formularios modernos.
+
 ## Estado actual
 
-Proyecto funcionando en entorno local. Landing publica, contacto, autenticacion y dashboard base implementados.
+Proyecto funcionando en entorno local. Landing publica, contacto, autenticacion, dashboard base y gestion de clientes implementados.

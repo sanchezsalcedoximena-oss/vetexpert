@@ -1,13 +1,10 @@
 import { DashboardShell } from "@/modules/dashboard/components/DashboardShell";
-import { PlaceholderPanel } from "@/modules/dashboard/components/PlaceholderPanel";
+import { ClientesPage } from "@/modules/clientes/components/ClientesPage";
 
 export default function DashboardClientesPage() {
   return (
-    <DashboardShell titulo="Clientes" descripcion="Acceso protegido al espacio de clientes.">
-      <PlaceholderPanel
-        titulo="Modulo clientes preparado"
-        descripcion="La ruta protegida existe para la navegacion base. El CRUD de clientes corresponde a su fase especifica."
-      />
+    <DashboardShell titulo="Clientes" descripcion="Gestiona clientes con busqueda, filtros, paginacion y acciones seguras.">
+      <ClientesPage />
     </DashboardShell>
   );
 }

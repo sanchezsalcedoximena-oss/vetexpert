@@ -26,6 +26,7 @@ model Usuario {
   correo              String                  @unique
   dni                 String?                 @unique
   celular             String?                 @unique
+  direccion           String?
   passwordHash        String                  @map("password_hash")
   rol                 Rol
   tipoUsuario         TipoUsuario             @map("tipo_usuario")

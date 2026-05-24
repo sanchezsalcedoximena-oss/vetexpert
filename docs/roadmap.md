@@ -1,37 +1,63 @@
-# Roadmap
+# Roadmap — VetExpert
 
-## Fase 1
+# Completado
+
+## Fase 01
+
 Arquitectura base.
 
-## Fase 2
+## Fase 02
+
 Autenticación.
 
-## Fase 3
+## Fase 03
+
 Landing page.
 
-## Fase 4
-Dashboard.
+## Fase 04
 
-## Fase 5
-Clientes.
+Dashboard base.
 
-## Fase 6
-Mascotas.
+## Fase 04.1
 
-## Fase 7
+Seed admin inicial.
+
+## Fase 05
+
+Gestión clientes.
+
+---
+
+# Próxima fase
+
+## Fase 06 — Mascotas
+
+CRUD mascotas.
+
+---
+
+# Fases pendientes
+
+## Fase 07
+
 Citas.
 
-## Fase 8
+## Fase 08
+
 Historia clínica.
 
-## Fase 9
+## Fase 09
+
 Portal cliente.
 
 ## Fase 10
+
 Reportes.
 
 ## Fase 11
+
 Configuración.
 
 ## Fase 12
+
 Mantenimiento.
