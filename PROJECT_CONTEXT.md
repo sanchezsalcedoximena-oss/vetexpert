@@ -76,3 +76,15 @@ Base de datos:
 - NO actualizar versiones innecesariamente.
 - NO modificar fases futuras.
 - Mantener foco únicamente en la fase actual.
+
+## Acceso al Sistema
+
+### Staff
+- Login separado
+- Dashboard administrativo
+- Acceso por roles
+
+### Cliente
+- Portal cliente independiente
+- Registro público
+- Gestión futura de citas y mascotas
