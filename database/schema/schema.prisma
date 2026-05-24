@@ -8,23 +8,60 @@ datasource db {
 }
 
 enum Rol {
-  admin
-  veterinario
-  secretaria
-  cliente
+  ADMIN
+  SECRETARIA
+  VETERINARIO
+  CLIENTE
+}
+
+enum TipoUsuario {
+  STAFF
+  CLIENTE
 }
 
 model Usuario {
-  id              String    @id @default(uuid()) @db.Uuid
-  nombres         String
-  apellidos       String
-  correo          String    @unique
-  passwordHash    String    @map("password_hash")
-  rol             Rol
-  activo          Boolean   @default(true)
-  creadoEn        DateTime  @default(now()) @map("creado_en")
-  actualizadoEn   DateTime  @updatedAt @map("actualizado_en")
-  eliminadoEn     DateTime? @map("eliminado_en")
+  id                  String                  @id @default(uuid()) @db.Uuid
+  nombres             String
+  apellidos           String
+  correo              String                  @unique
+  dni                 String?                 @unique
+  celular             String?                 @unique
+  passwordHash        String                  @map("password_hash")
+  rol                 Rol
+  tipoUsuario         TipoUsuario             @map("tipo_usuario")
+  activo              Boolean                 @default(true)
+  ultimoAccesoEn      DateTime?               @map("ultimo_acceso_en")
+  creadoEn            DateTime                @default(now()) @map("creado_en")
+  actualizadoEn       DateTime                @updatedAt @map("actualizado_en")
+  eliminadoEn         DateTime?               @map("eliminado_en")
+  refreshTokens       RefreshToken[]
+  recuperacionesClave RecuperacionClave[]
 
   @@map("usuarios")
+}
+
+model RefreshToken {
+  id             String    @id @default(uuid()) @db.Uuid
+  usuarioId      String    @map("usuario_id") @db.Uuid
+  tokenHash      String    @map("token_hash")
+  expiracionEn   DateTime  @map("expiracion_en")
+  revocadoEn     DateTime? @map("revocado_en")
+  creadoEn       DateTime  @default(now()) @map("creado_en")
+  usuario        Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("refresh_tokens")
+}
+
+model RecuperacionClave {
+  id             String    @id @default(uuid()) @db.Uuid
+  usuarioId      String    @map("usuario_id") @db.Uuid
+  tokenHash      String    @map("token_hash")
+  expiracionEn   DateTime  @map("expiracion_en")
+  usadoEn        DateTime? @map("usado_en")
+  creadoEn       DateTime  @default(now()) @map("creado_en")
+  usuario        Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("recuperaciones_clave")
 }

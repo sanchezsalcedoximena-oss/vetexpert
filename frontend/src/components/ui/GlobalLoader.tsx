@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 
 type GlobalLoaderProps = {
   visible: boolean;
+  texto?: string;
 };
 
-export function GlobalLoader({ visible }: GlobalLoaderProps) {
+export function GlobalLoader({ texto = "Cargando sistema...", visible }: GlobalLoaderProps) {
   if (!visible) {
     return null;
   }
@@ -20,7 +21,7 @@ export function GlobalLoader({ visible }: GlobalLoaderProps) {
           animate={{ x: [0, 18, 0], scaleY: [1, 0.92, 1] }}
           transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
         />
-        <p className="text-sm font-semibold text-texto">Cargando sistema...</p>
+        <p className="text-sm font-semibold text-texto">{texto}</p>
       </div>
     </div>
   );

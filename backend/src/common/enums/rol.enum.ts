@@ -1,6 +1,6 @@
 export enum Rol {
-  Admin = "admin",
-  Veterinario = "veterinario",
-  Secretaria = "secretaria",
-  Cliente = "cliente"
+  ADMIN = "ADMIN",
+  SECRETARIA = "SECRETARIA",
+  VETERINARIO = "VETERINARIO",
+  CLIENTE = "CLIENTE"
 }
