@@ -38,6 +38,8 @@ model Usuario {
   refreshTokens       RefreshToken[]
   recuperacionesClave RecuperacionClave[]
   mascotas            Mascota[]
+  citasComoVeterinario Cita[]              @relation("CitasComoVeterinario")
+  citasComoCliente     Cita[]              @relation("CitasComoCliente")
 
   @@map("usuarios")
 }
@@ -101,7 +103,39 @@ model Mascota {
   actualizadoEn   DateTime  @updatedAt @map("actualizado_en")
   eliminadoEn     DateTime? @map("eliminado_en")
   cliente         Usuario   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  citas           Cita[]
 
   @@index([clienteId])
   @@map("mascotas")
 }
+
+enum EstadoCita {
+  PENDIENTE
+  CONFIRMADA
+  COMPLETADA
+  CANCELADA
+}
+
+model Cita {
+  id            String     @id @default(uuid()) @db.Uuid
+  fecha         DateTime   @map("fecha")
+  motivo        String     @map("motivo")
+  observaciones String?    @map("observaciones")
+  estado        EstadoCita @default(PENDIENTE) @map("estado")
+  mascotaId     String     @map("mascota_id") @db.Uuid
+  veterinarioId String     @map("veterinario_id") @db.Uuid
+  clienteId     String     @map("cliente_id") @db.Uuid
+  creadoEn      DateTime   @default(now()) @map("creado_en")
+  actualizadoEn DateTime   @updatedAt @map("actualizado_en")
+  eliminadoEn   DateTime?  @map("eliminado_en")
+
+  mascota     Mascota @relation(fields: [mascotaId], references: [id], onDelete: Restrict)
+  veterinario Usuario @relation("CitasComoVeterinario", fields: [veterinarioId], references: [id], onDelete: Restrict)
+  cliente     Usuario @relation("CitasComoCliente", fields: [clienteId], references: [id], onDelete: Restrict)
+
+  @@index([mascotaId])
+  @@index([veterinarioId])
+  @@index([clienteId])
+  @@map("citas")
+}
+
