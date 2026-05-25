@@ -14,6 +14,8 @@ Proyecto funcionando correctamente en entorno local.
 * API funcionando en puerto 4000.
 * Seed admin inicial implementado y probado.
 * Modulo clientes implementado con CRUD protegido.
+* Modulo mascotas implementado con CRUD protegido.
+* Modulo citas implementado con CRUD protegido.
 
 ## Frontend
 
@@ -25,6 +27,8 @@ Proyecto funcionando correctamente en entorno local.
 * Sidebar moderna responsive implementada.
 * Dark mode disponible en acceso y dashboard.
 * Gestion de clientes funcional en `/dashboard/clientes`.
+* Gestion de mascotas funcional en `/dashboard/mascotas`.
+* Gestion de citas funcional en `/dashboard/citas`.
 
 ## Autenticacion implementada
 
@@ -134,6 +138,46 @@ Frontend:
 * Skeleton loaders.
 * Confirmacion de borrado.
 
+## Gestion Citas implementada
+
+Backend:
+
+* `GET /api/citas`
+* `GET /api/citas/:id`
+* `POST /api/citas`
+* `PATCH /api/citas/:id`
+* `DELETE /api/citas/:id`
+* Paginacion.
+* Busqueda libre en motivo, observaciones, mascota, cliente y veterinario.
+* Filtros por estado, veterinarioId, clienteId, mascotaId, fechaInicio y fechaFin.
+* Estados `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`.
+* Soft delete mediante `eliminadoEn`.
+* Validacion de fecha no pasada al crear o reprogramar.
+* Validacion de mascota activa y no eliminada.
+* Validacion de veterinario activo, no eliminado, `tipoUsuario: STAFF` y `rol: VETERINARIO`.
+* Asociacion automatica de `clienteId` desde la mascota seleccionada.
+* Prevencion de doble booking exacto por `veterinarioId + fecha`.
+* Guards JWT.
+* Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`.
+* `ADMIN` y `SECRETARIA`: CRUD completo.
+* `VETERINARIO`: lectura de su propia agenda y actualizacion parcial de `observaciones`/`estado`.
+
+Frontend:
+
+* `/dashboard/citas`.
+* Service `frontend/src/services/citas.ts` conectado a endpoints reales.
+* Tabla responsive en desktop y tarjetas en mobile.
+* Filtros por busqueda, estado, veterinario y rango de fechas.
+* Paginacion funcional.
+* Modal de crear y editar cita.
+* Selector dependiente cliente -> mascotas activas del cliente.
+* Selector de veterinario compatible con los datos disponibles del backend actual.
+* Drawer lateral con detalle completo de cita, paciente, dueno y veterinario.
+* Badges visuales para estados de cita.
+* Alertas Toast animadas.
+* Skeleton loaders.
+* Confirmacion de borrado.
+
 ## Prisma
 
 Schema ubicado en:
@@ -148,6 +192,7 @@ Migraciones aplicadas:
 * `20260524010000_fase_03_landing_contacto`
 * `20260524020000_fase_05_clientes`
 * `20260525001051_fase_06_mascotas`
+* `20260525024949_fase_07_citas`
 
 ## Endpoints activos
 
@@ -181,6 +226,14 @@ Mascotas:
 * `PATCH /api/mascotas/:id`
 * `DELETE /api/mascotas/:id`
 
+Citas:
+
+* `GET /api/citas`
+* `GET /api/citas/:id`
+* `POST /api/citas`
+* `PATCH /api/citas/:id`
+* `DELETE /api/citas/:id`
+
 ## Estado roadmap
 
 Completado:
@@ -192,10 +245,11 @@ Completado:
 * Fase 04.1 - Seed Admin Inicial
 * Fase 05 - Gestion clientes
 * Fase 06 - Mascotas
+* Fase 07 - Citas
 
 Proxima fase funcional:
 
-* Fase 07 - Citas
+* Fase 08 - Historia clinica
 
 ## Estado UX/UI
 
@@ -206,3 +260,4 @@ Pendiente:
 * Animaciones avanzadas.
 * Charts.
 * Mejoras responsive avanzadas por modulo.
+* Fase 08 - Historia clinica.

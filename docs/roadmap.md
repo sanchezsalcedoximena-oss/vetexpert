@@ -26,25 +26,25 @@ Seed admin inicial.
 
 Gestión clientes.
 
+## Fase 06
+
+Gestion mascotas.
+
+## Fase 07
+
+Gestion citas.
+
 ---
 
 # Próxima fase
 
-## Fase 06 — Mascotas
+## Fase 08 - Historia clinica
 
-CRUD mascotas.
+Historia clinica.
 
 ---
 
 # Fases pendientes
-
-## Fase 07
-
-Citas.
-
-## Fase 08
-
-Historia clínica.
 
 ## Fase 09
 

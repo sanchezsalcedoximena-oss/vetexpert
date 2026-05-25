@@ -149,4 +149,192 @@ Eliminación lógica (soft delete) de una mascota del sistema.
 
 # Citas
 
-Pendiente implementación.
+Modulo de gestion de citas con JWT, roles, filtros, paginacion y soft delete.
+
+## Estados disponibles
+
+* `PENDIENTE`
+* `CONFIRMADA`
+* `COMPLETADA`
+* `CANCELADA`
+
+## Roles y permisos
+
+* `ADMIN`: CRUD completo.
+* `SECRETARIA`: CRUD completo.
+* `VETERINARIO`: lectura y actualizacion parcial de su propia agenda. Solo puede actualizar `observaciones` y cambiar `estado` a `COMPLETADA` o `CANCELADA`.
+
+## Reglas de negocio implementadas
+
+* La fecha de la cita no puede ser pasada al crear o reprogramar.
+* La mascota debe existir, estar activa y no estar eliminada logicamente.
+* El veterinario debe existir, estar activo, no estar eliminado, tener `tipoUsuario: STAFF` y `rol: VETERINARIO`.
+* El `clienteId` no se recibe desde el frontend: se asigna automaticamente desde la mascota seleccionada.
+* Se evita doble reserva exacta del veterinario validando `veterinarioId + fecha` en citas no eliminadas.
+* La eliminacion es logica mediante `eliminadoEn`.
+
+### GET /api/citas
+Listar citas con paginacion, busqueda libre y filtros.
+
+* **Roles permitidos**: `ADMIN`, `SECRETARIA`, `VETERINARIO`
+* **Comportamiento por rol**:
+  * `ADMIN` y `SECRETARIA`: pueden ver todas las citas.
+  * `VETERINARIO`: el backend limita la consulta a su propio `veterinarioId`.
+* **Query Params**:
+  * `pagina` (opcional, entero, default: 1)
+  * `limite` (opcional, entero, default: 10, max: 50)
+  * `busqueda` (opcional, texto, busca en motivo, observaciones, mascota, cliente y veterinario)
+  * `estado` (opcional, enum: `PENDIENTE`, `CONFIRMADA`, `COMPLETADA`, `CANCELADA`)
+  * `veterinarioId` (opcional, UUID)
+  * `clienteId` (opcional, UUID)
+  * `mascotaId` (opcional, UUID)
+  * `fechaInicio` (opcional, ISO date string)
+  * `fechaFin` (opcional, ISO date string)
+* **Ejemplo request**:
+  ```http
+  GET /api/citas?pagina=1&limite=10&estado=CONFIRMADA&fechaInicio=2026-05-25T00:00:00.000Z&fechaFin=2026-05-31T23:59:59.000Z
+  ```
+* **Response (200 OK)**:
+  ```json
+  {
+    "datos": [
+      {
+        "id": "uuid-cita",
+        "fecha": "2026-05-26T15:30:00.000Z",
+        "motivo": "Control general",
+        "observaciones": "Paciente estable.",
+        "estado": "CONFIRMADA",
+        "mascotaId": "uuid-mascota",
+        "veterinarioId": "uuid-veterinario",
+        "clienteId": "uuid-cliente",
+        "mascota": {
+          "id": "uuid-mascota",
+          "nombre": "Lucas",
+          "especie": "PERRO",
+          "raza": "Golden Retriever"
+        },
+        "veterinario": {
+          "id": "uuid-veterinario",
+          "nombres": "Ana",
+          "apellidos": "Torres",
+          "correo": "ana.torres@vetexpert.com"
+        },
+        "cliente": {
+          "id": "uuid-cliente",
+          "nombres": "Juan",
+          "apellidos": "Perez",
+          "dni": "12345678",
+          "celular": "987654321"
+        },
+        "creadoEn": "2026-05-25T10:00:00.000Z",
+        "actualizadoEn": "2026-05-25T10:00:00.000Z"
+      }
+    ],
+    "meta": {
+      "pagina": 1,
+      "limite": 10,
+      "total": 1,
+      "totalPaginas": 1
+    }
+  }
+  ```
+
+### GET /api/citas/:id
+Obtener el detalle de una cita especifica.
+
+* **Roles permitidos**: `ADMIN`, `SECRETARIA`, `VETERINARIO`
+* **Comportamiento por rol**:
+  * `ADMIN` y `SECRETARIA`: pueden ver cualquier cita no eliminada.
+  * `VETERINARIO`: solo puede ver citas asignadas a su usuario.
+* **Response (200 OK)**:
+  ```json
+  {
+    "id": "uuid-cita",
+    "fecha": "2026-05-26T15:30:00.000Z",
+    "motivo": "Control general",
+    "observaciones": "Paciente estable.",
+    "estado": "CONFIRMADA",
+    "mascotaId": "uuid-mascota",
+    "veterinarioId": "uuid-veterinario",
+    "clienteId": "uuid-cliente",
+    "mascota": {
+      "id": "uuid-mascota",
+      "nombre": "Lucas",
+      "especie": "PERRO",
+      "raza": "Golden Retriever"
+    },
+    "veterinario": {
+      "id": "uuid-veterinario",
+      "nombres": "Ana",
+      "apellidos": "Torres",
+      "correo": "ana.torres@vetexpert.com"
+    },
+    "cliente": {
+      "id": "uuid-cliente",
+      "nombres": "Juan",
+      "apellidos": "Perez",
+      "dni": "12345678",
+      "celular": "987654321"
+    },
+    "creadoEn": "2026-05-25T10:00:00.000Z",
+    "actualizadoEn": "2026-05-25T10:00:00.000Z"
+  }
+  ```
+
+### POST /api/citas
+Crear una nueva cita.
+
+* **Roles permitidos**: `ADMIN`, `SECRETARIA`
+* **Request Body**:
+  ```json
+  {
+    "fecha": "2026-05-26T15:30:00.000Z",
+    "motivo": "Control general",
+    "observaciones": "Primera visita del paciente.",
+    "estado": "PENDIENTE",
+    "mascotaId": "uuid-mascota",
+    "veterinarioId": "uuid-veterinario"
+  }
+  ```
+* **Notas**:
+  * `estado` es opcional; si no se envia, el backend usa `PENDIENTE`.
+  * `clienteId` no debe enviarse; se obtiene desde la mascota.
+* **Response (201 Created)**: retorna el objeto de cita creado con relaciones `mascota`, `veterinario` y `cliente`.
+
+### PATCH /api/citas/:id
+Actualizar una cita de forma parcial.
+
+* **Roles permitidos**: `ADMIN`, `SECRETARIA`, `VETERINARIO`
+* **Permisos por rol**:
+  * `ADMIN` y `SECRETARIA`: pueden modificar fecha, motivo, observaciones, estado, mascota y veterinario.
+  * `VETERINARIO`: solo puede modificar `observaciones` y `estado`; el estado permitido es `COMPLETADA` o `CANCELADA`.
+* **Request Body ADMIN/SECRETARIA**:
+  ```json
+  {
+    "fecha": "2026-05-26T16:00:00.000Z",
+    "motivo": "Control general reprogramado",
+    "observaciones": "Cliente solicito mover la hora.",
+    "estado": "CONFIRMADA",
+    "mascotaId": "uuid-mascota",
+    "veterinarioId": "uuid-veterinario"
+  }
+  ```
+* **Request Body VETERINARIO**:
+  ```json
+  {
+    "estado": "COMPLETADA",
+    "observaciones": "Evaluacion finalizada sin incidencias."
+  }
+  ```
+* **Response (200 OK)**: retorna el objeto de cita actualizado con relaciones `mascota`, `veterinario` y `cliente`.
+
+### DELETE /api/citas/:id
+Eliminacion logica de una cita.
+
+* **Roles permitidos**: `ADMIN`, `SECRETARIA`
+* **Response (200 OK)**:
+  ```json
+  {
+    "mensaje": "Cita eliminada correctamente."
+  }
+  ```
