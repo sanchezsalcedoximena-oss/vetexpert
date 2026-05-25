@@ -848,6 +848,7 @@ En el detalle de mascota:
 * Crear service.
 * Implementar reglas de negocio.
 * Mantener patrones de Prisma ya usados en clientes, mascotas y citas.
+* Estado: implementado sin controller REST.
 
 ### Fase 08.3 - Endpoints
 
@@ -855,6 +856,7 @@ En el detalle de mascota:
 * Aplicar `JwtAuthGuard`, `RolesGuard` y `@Roles()`.
 * Exponer endpoints definidos en este documento.
 * Probar permisos por rol.
+* Estado: implementado.
 
 ### Fase 08.4 - Frontend services
 

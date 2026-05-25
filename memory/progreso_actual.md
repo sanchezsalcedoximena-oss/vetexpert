@@ -16,6 +16,7 @@ Proyecto funcionando correctamente en entorno local.
 * Modulo clientes implementado con CRUD protegido.
 * Modulo mascotas implementado con CRUD protegido.
 * Modulo citas implementado con CRUD protegido.
+* Modulo historias clinicas implementado en backend hasta endpoints REST.
 
 ## Frontend
 
@@ -178,6 +179,39 @@ Frontend:
 * Skeleton loaders.
 * Confirmacion de borrado.
 
+## Historia Clinica implementada parcialmente
+
+Backend:
+
+* Modelo Prisma `HistoriaClinica`.
+* Migracion `20260525151556_fase_08_historia_clinica`.
+* Modulo `HistoriasClinicasModule`.
+* Service con reglas de negocio.
+* DTOs de creacion, actualizacion y listado.
+* Controller REST completo.
+* `GET /api/historias-clinicas`
+* `GET /api/historias-clinicas/:id`
+* `GET /api/historias-clinicas/mascota/:mascotaId`
+* `POST /api/historias-clinicas/cita/:citaId`
+* `PATCH /api/historias-clinicas/:id`
+* `PATCH /api/historias-clinicas/:id/cerrar`
+* `PATCH /api/historias-clinicas/:id/reabrir`
+* `DELETE /api/historias-clinicas/:id`
+* Creacion solo desde citas `COMPLETADA`.
+* Una unica historia clinica activa por cita.
+* Derivacion automatica de `mascotaId` y `veterinarioId` desde la cita.
+* Validacion de mascota activa.
+* Validacion de veterinario `STAFF` con rol `VETERINARIO`.
+* Bloqueo de edicion si `cerrada = true`.
+* Reapertura solo por `ADMIN`.
+* Soft delete mediante `eliminadoEn`.
+* Guards JWT.
+* Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`.
+
+Frontend:
+
+* Pendiente para Fase 08.4 en adelante.
+
 ## Prisma
 
 Schema ubicado en:
@@ -193,6 +227,7 @@ Migraciones aplicadas:
 * `20260524020000_fase_05_clientes`
 * `20260525001051_fase_06_mascotas`
 * `20260525024949_fase_07_citas`
+* `20260525151556_fase_08_historia_clinica`
 
 ## Endpoints activos
 
@@ -233,6 +268,17 @@ Citas:
 * `POST /api/citas`
 * `PATCH /api/citas/:id`
 * `DELETE /api/citas/:id`
+
+Historias Clinicas:
+
+* `GET /api/historias-clinicas`
+* `GET /api/historias-clinicas/:id`
+* `GET /api/historias-clinicas/mascota/:mascotaId`
+* `POST /api/historias-clinicas/cita/:citaId`
+* `PATCH /api/historias-clinicas/:id`
+* `PATCH /api/historias-clinicas/:id/cerrar`
+* `PATCH /api/historias-clinicas/:id/reabrir`
+* `DELETE /api/historias-clinicas/:id`
 
 ## Estado roadmap
 
