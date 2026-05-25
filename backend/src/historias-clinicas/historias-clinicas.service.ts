@@ -294,7 +294,6 @@ export class HistoriasClinicasService {
       where: {
         id: veterinarioId,
         rol: "VETERINARIO",
-        tipoUsuario: "STAFF",
         activo: true,
         eliminadoEn: null
       }

@@ -11,12 +11,6 @@ enum Rol {
   ADMIN
   SECRETARIA
   VETERINARIO
-  CLIENTE
-}
-
-enum TipoUsuario {
-  STAFF
-  CLIENTE
 }
 
 model Usuario {
@@ -29,7 +23,6 @@ model Usuario {
   direccion           String?
   passwordHash        String                  @map("password_hash")
   rol                 Rol
-  tipoUsuario         TipoUsuario             @map("tipo_usuario")
   activo              Boolean                 @default(true)
   ultimoAccesoEn      DateTime?               @map("ultimo_acceso_en")
   creadoEn            DateTime                @default(now()) @map("creado_en")
@@ -37,9 +30,7 @@ model Usuario {
   eliminadoEn         DateTime?               @map("eliminado_en")
   refreshTokens       RefreshToken[]
   recuperacionesClave RecuperacionClave[]
-  mascotas            Mascota[]
-  citasComoVeterinario Cita[]              @relation("CitasComoVeterinario")
-  citasComoCliente     Cita[]              @relation("CitasComoCliente")
+  citasComoVeterinario Cita[]                 @relation("CitasComoVeterinario")
   historiasClinicas    HistoriaClinica[]
 
   @@map("usuarios")
@@ -71,18 +62,22 @@ model RecuperacionClave {
   @@map("recuperaciones_clave")
 }
 
-model MensajeContacto {
-  id              String   @id @default(uuid()) @db.Uuid
-  nombres         String
-  correo          String
-  celular         String?
-  asunto          String
-  mensaje         String
-  atendido        Boolean  @default(false)
-  creadoEn        DateTime @default(now()) @map("creado_en")
-  actualizadoEn   DateTime @updatedAt @map("actualizado_en")
+model Cliente {
+  id            String    @id @default(uuid()) @db.Uuid
+  nombres       String
+  apellidos     String
+  correo        String    @unique
+  dni           String?   @unique
+  celular       String?   @unique
+  direccion     String?
+  activo        Boolean   @default(true)
+  creadoEn      DateTime  @default(now()) @map("creado_en")
+  actualizadoEn DateTime  @updatedAt @map("actualizado_en")
+  eliminadoEn   DateTime? @map("eliminado_en")
+  mascotas      Mascota[]
+  citas         Cita[]
 
-  @@map("mensajes_contacto")
+  @@map("clientes")
 }
 
 model Mascota {
@@ -103,7 +98,7 @@ model Mascota {
   creadoEn        DateTime  @default(now()) @map("creado_en")
   actualizadoEn   DateTime  @updatedAt @map("actualizado_en")
   eliminadoEn     DateTime? @map("eliminado_en")
-  cliente         Usuario   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  cliente         Cliente   @relation(fields: [clienteId], references: [id], onDelete: Restrict)
   citas           Cita[]
   historiasClinicas HistoriaClinica[]
 
@@ -133,7 +128,7 @@ model Cita {
 
   mascota     Mascota @relation(fields: [mascotaId], references: [id], onDelete: Restrict)
   veterinario Usuario @relation("CitasComoVeterinario", fields: [veterinarioId], references: [id], onDelete: Restrict)
-  cliente     Usuario @relation("CitasComoCliente", fields: [clienteId], references: [id], onDelete: Restrict)
+  cliente     Cliente @relation(fields: [clienteId], references: [id], onDelete: Restrict)
   historiaClinica HistoriaClinica?
 
   @@index([mascotaId])

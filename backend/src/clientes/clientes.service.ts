@@ -1,7 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { randomBytes } from "node:crypto";
-import { hash } from "bcryptjs";
 import { PrismaService } from "../common/prisma/prisma.service";
 import { ActualizarClienteDto } from "./dto/actualizar-cliente.dto";
 import { CrearClienteDto } from "./dto/crear-cliente.dto";
@@ -15,8 +13,7 @@ export class ClientesService {
     const pagina = query.pagina ?? 1;
     const limite = query.limite ?? 10;
     const busqueda = query.busqueda?.trim();
-    const where: Prisma.UsuarioWhereInput = {
-      tipoUsuario: "CLIENTE",
+    const where: Prisma.ClienteWhereInput = {
       eliminadoEn: null,
       ...(query.estado === "inactivos" ? { activo: false } : {}),
       ...((query.estado ?? "activos") === "activos" ? { activo: true } : {}),
@@ -33,8 +30,8 @@ export class ClientesService {
         : {})
     };
     const [total, clientes] = await this.prisma.$transaction([
-      this.prisma.usuario.count({ where }),
-      this.prisma.usuario.findMany({
+      this.prisma.cliente.count({ where }),
+      this.prisma.cliente.findMany({
         where,
         orderBy: { creadoEn: "desc" },
         skip: (pagina - 1) * limite,
@@ -55,10 +52,9 @@ export class ClientesService {
   }
 
   async obtenerPorId(id: string) {
-    const cliente = await this.prisma.usuario.findFirst({
+    const cliente = await this.prisma.cliente.findFirst({
       where: {
         id,
-        tipoUsuario: "CLIENTE",
         eliminadoEn: null
       },
       select: this.camposCliente()
@@ -74,7 +70,7 @@ export class ClientesService {
   async crear(dto: CrearClienteDto) {
     await this.validarDuplicados(dto);
 
-    return this.prisma.usuario.create({
+    return this.prisma.cliente.create({
       data: {
         nombres: dto.nombres.trim(),
         apellidos: dto.apellidos.trim(),
@@ -82,9 +78,6 @@ export class ClientesService {
         celular: dto.celular,
         correo: dto.correo.toLowerCase().trim(),
         direccion: dto.direccion?.trim(),
-        passwordHash: await hash(dto.contrasena ?? this.generarContrasenaTemporal(), 12),
-        rol: "CLIENTE",
-        tipoUsuario: "CLIENTE",
         activo: dto.activo ?? true
       },
       select: this.camposCliente()
@@ -95,18 +88,17 @@ export class ClientesService {
     await this.obtenerPorId(id);
     await this.validarDuplicados(dto, id);
 
-    const data: Prisma.UsuarioUpdateInput = {
+    const data: Prisma.ClienteUpdateInput = {
       ...(dto.nombres ? { nombres: dto.nombres.trim() } : {}),
       ...(dto.apellidos ? { apellidos: dto.apellidos.trim() } : {}),
       ...(dto.dni ? { dni: dto.dni } : {}),
       ...(dto.celular ? { celular: dto.celular } : {}),
       ...(dto.correo ? { correo: dto.correo.toLowerCase().trim() } : {}),
       ...(dto.direccion !== undefined ? { direccion: dto.direccion?.trim() || null } : {}),
-      ...(dto.activo !== undefined ? { activo: dto.activo } : {}),
-      ...(dto.contrasena ? { passwordHash: await hash(dto.contrasena, 12) } : {})
+      ...(dto.activo !== undefined ? { activo: dto.activo } : {})
     };
 
-    return this.prisma.usuario.update({
+    return this.prisma.cliente.update({
       where: { id },
       data,
       select: this.camposCliente()
@@ -116,7 +108,7 @@ export class ClientesService {
   async eliminar(id: string) {
     await this.obtenerPorId(id);
 
-    await this.prisma.usuario.update({
+    await this.prisma.cliente.update({
       where: { id },
       data: {
         activo: false,
@@ -130,7 +122,7 @@ export class ClientesService {
   }
 
   private async validarDuplicados(dto: Partial<CrearClienteDto>, idIgnorado?: string) {
-    const condiciones: Prisma.UsuarioWhereInput[] = [];
+    const condiciones: Prisma.ClienteWhereInput[] = [];
 
     if (dto.correo) {
       condiciones.push({ correo: dto.correo.toLowerCase().trim() });
@@ -148,7 +140,7 @@ export class ClientesService {
       return;
     }
 
-    const existe = await this.prisma.usuario.findFirst({
+    const existe = await this.prisma.cliente.findFirst({
       where: {
         OR: condiciones,
         ...(idIgnorado ? { NOT: { id: idIgnorado } } : {})
@@ -158,10 +150,6 @@ export class ClientesService {
     if (existe) {
       throw new ConflictException("Ya existe un cliente con el correo, DNI o celular ingresado.");
     }
-  }
-
-  private generarContrasenaTemporal() {
-    return `Cliente${randomBytes(8).toString("hex")}A1`;
   }
 
   private camposCliente() {
@@ -176,6 +164,6 @@ export class ClientesService {
       activo: true,
       creadoEn: true,
       actualizadoEn: true
-    } satisfies Prisma.UsuarioSelect;
+    } satisfies Prisma.ClienteSelect;
   }
 }

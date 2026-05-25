@@ -8,38 +8,12 @@ export type SesionAuth = {
     nombres: string;
     apellidos: string;
     correo: string;
-    rol: "ADMIN" | "SECRETARIA" | "VETERINARIO" | "CLIENTE";
-    tipoUsuario: "STAFF" | "CLIENTE";
+    rol: "ADMIN" | "SECRETARIA" | "VETERINARIO";
   };
 };
 
 export async function loginStaff(payload: { correo: string; contrasena: string }) {
   const { data } = await api.post<SesionAuth>("/api/auth/staff/login", payload);
-  guardarSesion(data);
-  return data;
-}
-
-export async function loginCliente(payload: { correo: string; contrasena: string }) {
-  const { data } = await api.post<SesionAuth>("/api/auth/clientes/login", payload);
-  guardarSesion(data);
-  return data;
-}
-
-export async function loginGoogleStaff(payload: { correo: string; nombre: string }) {
-  const { data } = await api.post<SesionAuth>("/api/auth/staff/google", payload);
-  guardarSesion(data);
-  return data;
-}
-
-export async function registrarCliente(payload: {
-  nombres: string;
-  apellidos: string;
-  celular: string;
-  dni?: string;
-  correo: string;
-  contrasena: string;
-}) {
-  const { data } = await api.post<SesionAuth>("/api/auth/clientes/registro", payload);
   guardarSesion(data);
   return data;
 }
@@ -54,7 +28,6 @@ export async function obtenerPerfil() {
     id: string;
     correo: string;
     rol: SesionAuth["usuario"]["rol"];
-    tipoUsuario: SesionAuth["usuario"]["tipoUsuario"];
   }>("/api/auth/perfil");
   return data;
 }
@@ -96,7 +69,7 @@ export function guardarSesion(sesion: SesionAuth) {
   localStorage.setItem("vetexpert_usuario", JSON.stringify(sesion.usuario));
   document.cookie = `vetexpert_access_token=${sesion.accessToken}; path=/; max-age=900; SameSite=Lax`;
   document.cookie = `vetexpert_rol=${sesion.usuario.rol}; path=/; max-age=604800; SameSite=Lax`;
-  document.cookie = `vetexpert_tipo_usuario=${sesion.usuario.tipoUsuario}; path=/; max-age=604800; SameSite=Lax`;
+  document.cookie = "vetexpert_tipo_usuario=; path=/; max-age=0; SameSite=Lax";
 }
 
 export function cerrarSesionLocal() {

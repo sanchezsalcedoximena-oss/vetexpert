@@ -31,13 +31,6 @@ export class ActualizarClienteDto {
   direccion?: string;
 
   @IsOptional()
-  @MinLength(8, { message: "La contrasena debe tener al menos 8 caracteres." })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, {
-    message: "La contrasena debe incluir mayuscula, minuscula y numero."
-  })
-  contrasena?: string;
-
-  @IsOptional()
   @IsBoolean({ message: "El estado activo no es valido." })
   activo?: boolean;
 }

@@ -40,7 +40,6 @@ api.interceptors.response.use(
         refreshToken: string;
         usuario: {
           rol: string;
-          tipoUsuario: string;
         };
       }>("/api/auth/refresh", { refreshToken });
       guardarSesionLocal(sesion);
@@ -67,7 +66,6 @@ function guardarSesionLocal(sesion: {
   refreshToken: string;
   usuario: {
     rol: string;
-    tipoUsuario: string;
   };
 }) {
   localStorage.setItem("vetexpert_access_token", sesion.accessToken);
@@ -75,7 +73,7 @@ function guardarSesionLocal(sesion: {
   localStorage.setItem("vetexpert_usuario", JSON.stringify(sesion.usuario));
   document.cookie = `vetexpert_access_token=${sesion.accessToken}; path=/; max-age=900; SameSite=Lax`;
   document.cookie = `vetexpert_rol=${sesion.usuario.rol}; path=/; max-age=604800; SameSite=Lax`;
-  document.cookie = `vetexpert_tipo_usuario=${sesion.usuario.tipoUsuario}; path=/; max-age=604800; SameSite=Lax`;
+  document.cookie = "vetexpert_tipo_usuario=; path=/; max-age=0; SameSite=Lax";
 }
 
 function limpiarSesionLocal() {

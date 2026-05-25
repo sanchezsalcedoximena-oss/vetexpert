@@ -1,25 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../common/prisma/prisma.service";
 import { CrearMensajeContactoDto } from "./dto/crear-mensaje-contacto.dto";
 
 @Injectable()
 export class ContactoService {
-  constructor(private readonly prisma: PrismaService) {}
-
-  async crearMensaje(dto: CrearMensajeContactoDto) {
-    const mensaje = await this.prisma.mensajeContacto.create({
-      data: {
-        nombres: dto.nombres.trim(),
-        correo: dto.correo.toLowerCase().trim(),
-        celular: dto.celular?.trim(),
-        asunto: dto.asunto.trim(),
-        mensaje: dto.mensaje.trim()
-      }
-    });
+  crearMensaje(dto: CrearMensajeContactoDto) {
+    const texto = [
+      `Nombres: ${dto.nombres.trim()}`,
+      `Celular: ${dto.celular?.trim() || "No indicado"}`,
+      `Correo: ${dto.correo.toLowerCase().trim()}`,
+      `Asunto: ${dto.asunto.trim()}`,
+      `Mensaje: ${dto.mensaje.trim()}`
+    ].join("\n");
 
     return {
-      id: mensaje.id,
-      mensaje: "Mensaje recibido. Nos comunicaremos contigo pronto."
+      whatsappUrl: `https://api.whatsapp.com/send/?phone=51946223649&text=${encodeURIComponent(texto)}`
     };
   }
 }

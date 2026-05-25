@@ -213,7 +213,6 @@ export class CitasService {
       where: {
         id: veterinarioId,
         rol: "VETERINARIO",
-        tipoUsuario: "STAFF",
         activo: true,
         eliminadoEn: null
       }

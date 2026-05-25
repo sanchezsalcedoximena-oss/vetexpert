@@ -25,13 +25,6 @@ const clienteSchema = z.object({
   celular: celularPeruSchema,
   correo: correoSchema,
   direccion: z.string().max(160, "Maximo 160 caracteres.").optional(),
-  contrasena: z.union([
-    z.literal(""),
-    z
-      .string()
-      .min(8, "Minimo 8 caracteres.")
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, "Incluye mayuscula, minuscula y numero.")
-  ]),
   activo: z.boolean()
 });
 
@@ -117,7 +110,7 @@ export function ClientesPage() {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="text-xl font-bold">Gestion de clientes</h2>
-            <p className="mt-1 text-sm text-texto/60">Administra clientes activos, datos de contacto y acceso base.</p>
+            <p className="mt-1 text-sm text-texto/60">Administra clientes activos y datos de contacto internos.</p>
           </div>
           <Button type="button" onClick={() => setModal({ modo: "crear" })}>
             <Plus className="h-4 w-4" />
@@ -334,7 +327,6 @@ function ClienteModal({
       celular: String(formData.get("celular") ?? ""),
       correo: String(formData.get("correo") ?? ""),
       direccion: String(formData.get("direccion") ?? ""),
-      contrasena: String(formData.get("contrasena") ?? ""),
       activo: formData.get("activo") === "on"
     });
 
@@ -347,20 +339,13 @@ function ClienteModal({
       setErrores({});
       setGuardando(true);
       const payload = {
-
         nombres: validacion.data.nombres,
         apellidos: validacion.data.apellidos,
         dni: validacion.data.dni,
         celular: validacion.data.celular,
         correo: validacion.data.correo,
         direccion: validacion.data.direccion || undefined,
-        contrasena: validacion.data.contrasena || undefined,
         activo: validacion.data.activo
-        /*
-        ...validacion.data,
-        direccion: validacion.data.direccion || undefined,
-        contrasena: validacion.data.contrasena || undefined
-        */
       };
 
       if (modo === "crear") {
@@ -402,7 +387,6 @@ function ClienteModal({
           <Input defaultValue={cliente?.celular ?? ""} error={errores.celular} inputMode="numeric" label="Celular" name="celular" />
           <Input defaultValue={cliente?.correo} error={errores.correo} label="Correo" name="correo" type="email" />
           <Input defaultValue={cliente?.direccion ?? ""} error={errores.direccion} label="Direccion" name="direccion" />
-          <Input error={errores.contrasena} label={modo === "crear" ? "Contrasena inicial" : "Nueva contrasena"} name="contrasena" type="password" />
           <label className="flex items-center gap-3 rounded-md border border-borde bg-fondo px-3 py-3 text-sm font-semibold">
             <input defaultChecked={cliente?.activo ?? true} name="activo" type="checkbox" />
             Cliente activo

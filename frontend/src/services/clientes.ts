@@ -34,7 +34,6 @@ export type ClientePayload = {
   celular: string;
   correo: string;
   direccion?: string;
-  contrasena?: string;
   activo?: boolean;
 };
 

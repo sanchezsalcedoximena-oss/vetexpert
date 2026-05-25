@@ -1,5 +1,5 @@
-import { AccesoForm } from "@/modules/auth/components/AccesoForm";
+import { redirect } from "next/navigation";
 
 export default function PortalLoginPage() {
-  return <AccesoForm tipo="cliente" />;
+  redirect("/staff/login");
 }

@@ -26,7 +26,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 
-type RolDashboard = "ADMIN" | "SECRETARIA" | "VETERINARIO" | "CLIENTE";
+type RolDashboard = "ADMIN" | "SECRETARIA" | "VETERINARIO";
 
 const enlacesBase: Array<{
   nombre: string;
@@ -34,10 +34,10 @@ const enlacesBase: Array<{
   icono: LucideIcon;
   roles: RolDashboard[];
 }> = [
-  { nombre: "Dashboard", href: "/dashboard", icono: Home, roles: ["ADMIN", "SECRETARIA", "VETERINARIO", "CLIENTE"] },
+  { nombre: "Dashboard", href: "/dashboard", icono: Home, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] },
   { nombre: "Clientes", href: "/dashboard/clientes", icono: Users, roles: ["ADMIN", "SECRETARIA"] },
-  { nombre: "Mascotas", href: "/dashboard/mascotas", icono: PawPrint, roles: ["ADMIN", "SECRETARIA", "VETERINARIO", "CLIENTE"] },
-  { nombre: "Citas", href: "/dashboard/citas", icono: CalendarDays, roles: ["ADMIN", "SECRETARIA", "VETERINARIO", "CLIENTE"] }
+  { nombre: "Mascotas", href: "/dashboard/mascotas", icono: PawPrint, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] },
+  { nombre: "Citas", href: "/dashboard/citas", icono: CalendarDays, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] }
 ];
 
 type DashboardShellProps = {

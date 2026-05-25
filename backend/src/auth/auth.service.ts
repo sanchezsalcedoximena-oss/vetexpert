@@ -1,15 +1,13 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { randomBytes, randomUUID } from "node:crypto";
 import { compare, hash } from "bcryptjs";
 import { PrismaService } from "../common/prisma/prisma.service";
 import { Rol } from "../common/enums/rol.enum";
-import { GoogleMockDto } from "./dto/google-mock.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RecuperarContrasenaDto } from "./dto/recuperar-contrasena.dto";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
-import { RegistroClienteDto } from "./dto/registro-cliente.dto";
-import { JwtPayload, TipoUsuario } from "./types/jwt-payload.type";
+import { JwtPayload } from "./types/jwt-payload.type";
 
 type UsuarioAuth = {
   id: string;
@@ -17,7 +15,6 @@ type UsuarioAuth = {
   apellidos: string;
   correo: string;
   rol: Rol;
-  tipoUsuario: TipoUsuario;
 };
 
 const STAFF_ROLES = [Rol.ADMIN, Rol.SECRETARIA, Rol.VETERINARIO];
@@ -42,7 +39,6 @@ export class AuthService {
     const usuario = await this.prisma.usuario.findFirst({
       where: {
         correo: dto.correo.toLowerCase(),
-        tipoUsuario: "STAFF",
         rol: {
           in: STAFF_ROLES
         },
@@ -58,82 +54,6 @@ export class AuthService {
     await this.prisma.usuario.update({
       where: { id: usuario.id },
       data: { ultimoAccesoEn: new Date() }
-    });
-
-    return this.crearSesion(this.mapearUsuario(usuario));
-  }
-
-  async loginCliente(dto: LoginDto) {
-    const usuario = await this.prisma.usuario.findFirst({
-      where: {
-        correo: dto.correo.toLowerCase(),
-        tipoUsuario: "CLIENTE",
-        rol: Rol.CLIENTE,
-        activo: true,
-        eliminadoEn: null
-      }
-    });
-
-    if (!usuario || !(await compare(dto.contrasena, usuario.passwordHash))) {
-      throw new UnauthorizedException("Credenciales de cliente invalidas.");
-    }
-
-    await this.prisma.usuario.update({
-      where: { id: usuario.id },
-      data: { ultimoAccesoEn: new Date() }
-    });
-
-    return this.crearSesion(this.mapearUsuario(usuario));
-  }
-
-  async loginGoogleStaff(dto: GoogleMockDto) {
-    const usuario = await this.prisma.usuario.findFirst({
-      where: {
-        correo: dto.correo.toLowerCase(),
-        tipoUsuario: "STAFF",
-        rol: {
-          in: STAFF_ROLES
-        },
-        activo: true,
-        eliminadoEn: null
-      }
-    });
-
-    if (!usuario) {
-      throw new UnauthorizedException("Google staff esta preparado; el correo aun no pertenece al staff.");
-    }
-
-    await this.prisma.usuario.update({
-      where: { id: usuario.id },
-      data: { ultimoAccesoEn: new Date() }
-    });
-
-    return this.crearSesion(this.mapearUsuario(usuario));
-  }
-
-  async registrarCliente(dto: RegistroClienteDto) {
-    const correo = dto.correo.toLowerCase();
-    const existe = await this.prisma.usuario.findFirst({
-      where: {
-        OR: [{ correo }, { celular: dto.celular }, ...(dto.dni ? [{ dni: dto.dni }] : [])]
-      }
-    });
-
-    if (existe) {
-      throw new ConflictException("Ya existe un usuario con el correo, celular o DNI ingresado.");
-    }
-
-    const usuario = await this.prisma.usuario.create({
-      data: {
-        nombres: dto.nombres.trim(),
-        apellidos: dto.apellidos.trim(),
-        celular: dto.celular,
-        dni: dto.dni,
-        correo,
-        passwordHash: await hash(dto.contrasena, 12),
-        rol: Rol.CLIENTE,
-        tipoUsuario: "CLIENTE"
-      }
     });
 
     return this.crearSesion(this.mapearUsuario(usuario));
@@ -159,7 +79,11 @@ export class AuthService {
       }
     });
 
-    if (!tokenGuardado || !(await compare(secreto, tokenGuardado.tokenHash))) {
+    if (
+      !tokenGuardado ||
+      !this.esStaffActivo(tokenGuardado.usuario) ||
+      !(await compare(secreto, tokenGuardado.tokenHash))
+    ) {
       throw new UnauthorizedException("Refresh token invalido.");
     }
 
@@ -175,6 +99,9 @@ export class AuthService {
     const usuario = await this.prisma.usuario.findFirst({
       where: {
         correo: dto.correo.toLowerCase(),
+        rol: {
+          in: STAFF_ROLES
+        },
         activo: true,
         eliminadoEn: null
       }
@@ -202,8 +129,7 @@ export class AuthService {
     return {
       id: usuario.sub,
       correo: usuario.correo,
-      rol: usuario.rol,
-      tipoUsuario: usuario.tipoUsuario
+      rol: usuario.rol
     };
   }
 
@@ -211,8 +137,7 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: usuario.id,
       correo: usuario.correo,
-      rol: usuario.rol,
-      tipoUsuario: usuario.tipoUsuario
+      rol: usuario.rol
     };
     const refreshToken = await this.crearRefreshToken(usuario.id);
 
@@ -249,15 +174,21 @@ export class AuthService {
     apellidos: string;
     correo: string;
     rol: string;
-    tipoUsuario: string;
   }): UsuarioAuth {
+    if (!this.esStaffActivo(usuario)) {
+      throw new UnauthorizedException("Usuario staff invalido.");
+    }
+
     return {
       id: usuario.id,
       nombres: usuario.nombres,
       apellidos: usuario.apellidos,
       correo: usuario.correo,
-      rol: usuario.rol as Rol,
-      tipoUsuario: usuario.tipoUsuario as TipoUsuario
+      rol: usuario.rol as Rol
     };
+  }
+
+  private esStaffActivo(usuario: { rol: string; activo?: boolean; eliminadoEn?: Date | null }) {
+    return STAFF_ROLES.includes(usuario.rol as Rol) && usuario.activo !== false && !usuario.eliminadoEn;
   }
 }

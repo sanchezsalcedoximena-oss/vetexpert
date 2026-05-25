@@ -1,5 +1,3 @@
-import { api } from "./api";
-
 export type MensajeContactoPayload = {
   nombres: string;
   correo: string;
@@ -8,7 +6,16 @@ export type MensajeContactoPayload = {
   mensaje: string;
 };
 
-export async function enviarMensajeContacto(payload: MensajeContactoPayload) {
-  const { data } = await api.post<{ id: string; mensaje: string }>("/api/contacto/mensajes", payload);
-  return data;
+const WHATSAPP_CONTACTO_URL = "https://api.whatsapp.com/send/?phone=51946223649&text=";
+
+export function construirUrlWhatsappContacto(payload: MensajeContactoPayload) {
+  const texto = [
+    `Nombres: ${payload.nombres.trim()}`,
+    `Celular: ${payload.celular?.trim() || "No indicado"}`,
+    `Correo: ${payload.correo.toLowerCase().trim()}`,
+    `Asunto: ${payload.asunto.trim()}`,
+    `Mensaje: ${payload.mensaje.trim()}`
+  ].join("\n");
+
+  return `${WHATSAPP_CONTACTO_URL}${encodeURIComponent(texto)}`;
 }

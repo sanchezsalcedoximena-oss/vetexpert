@@ -1,10 +1,8 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../common/guards/jwt-auth.guard";
-import { GoogleMockDto } from "./dto/google-mock.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RecuperarContrasenaDto } from "./dto/recuperar-contrasena.dto";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
-import { RegistroClienteDto } from "./dto/registro-cliente.dto";
 import { AuthService } from "./auth.service";
 import { JwtPayload } from "./types/jwt-payload.type";
 
@@ -24,21 +22,6 @@ export class AuthController {
   @Post("staff/login")
   loginStaff(@Body() dto: LoginDto) {
     return this.authService.loginStaff(dto);
-  }
-
-  @Post("clientes/login")
-  loginCliente(@Body() dto: LoginDto) {
-    return this.authService.loginCliente(dto);
-  }
-
-  @Post("staff/google")
-  loginGoogleStaff(@Body() dto: GoogleMockDto) {
-    return this.authService.loginGoogleStaff(dto);
-  }
-
-  @Post("clientes/registro")
-  registrarCliente(@Body() dto: RegistroClienteDto) {
-    return this.authService.registrarCliente(dto);
   }
 
   @Post("refresh")

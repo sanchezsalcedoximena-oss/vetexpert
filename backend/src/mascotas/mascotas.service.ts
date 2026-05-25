@@ -159,10 +159,9 @@ export class MascotasService {
   }
 
   async validarCliente(clienteId: string) {
-    const cliente = await this.prisma.usuario.findFirst({
+    const cliente = await this.prisma.cliente.findFirst({
       where: {
         id: clienteId,
-        tipoUsuario: "CLIENTE",
         activo: true,
         eliminadoEn: null
       }

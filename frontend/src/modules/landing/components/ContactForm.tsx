@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { enviarMensajeContacto } from "@/services/contacto";
+import { construirUrlWhatsappContacto } from "@/services/contacto";
 import { celularPeruSchema, correoSchema } from "@/validators/peru";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +21,7 @@ type ContactoErrores = Partial<Record<keyof z.infer<typeof contactoSchema> | "ge
 
 export function ContactForm() {
   const [errores, setErrores] = useState<ContactoErrores>({});
-  const [estado, setEstado] = useState<"inicial" | "enviando" | "exito">("inicial");
+  const [estado, setEstado] = useState<"inicial" | "abriendo">("inicial");
 
   async function enviarFormulario(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,19 +42,16 @@ export function ContactForm() {
       return;
     }
 
-    try {
-      setErrores({});
-      setEstado("enviando");
-      await enviarMensajeContacto({
-        ...validacion.data,
-        celular: validacion.data.celular || undefined
-      });
-      form.reset();
-      setEstado("exito");
-    } catch {
-      setErrores({ general: "No pudimos enviar el mensaje. Intentalo nuevamente." });
-      setEstado("inicial");
-    }
+    setErrores({});
+    setEstado("abriendo");
+    const whatsappUrl = construirUrlWhatsappContacto({
+      ...validacion.data,
+      celular: validacion.data.celular || undefined
+    });
+
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    form.reset();
+    setEstado("inicial");
   }
 
   return (
@@ -81,13 +78,8 @@ export function ContactForm() {
         {errores.mensaje ? <span className="mt-1.5 block text-xs font-medium text-red-600">{errores.mensaje}</span> : null}
       </label>
       {errores.general ? <p className="mt-4 text-sm font-semibold text-red-600">{errores.general}</p> : null}
-      {estado === "exito" ? (
-        <p className="mt-4 rounded-md border border-exito/30 bg-exito/10 px-3 py-2 text-sm font-semibold text-exito">
-          Mensaje enviado. Te responderemos pronto.
-        </p>
-      ) : null}
-      <Button className="mt-5 w-full" disabled={estado === "enviando"} type="submit">
-        {estado === "enviando" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+      <Button className="mt-5 w-full" disabled={estado === "abriendo"} type="submit">
+        {estado === "abriendo" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         Enviar mensaje
       </Button>
     </form>

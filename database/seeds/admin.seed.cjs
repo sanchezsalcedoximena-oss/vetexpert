@@ -21,7 +21,6 @@ async function main() {
       correo,
       passwordHash: await hash("Admin123*", 12),
       rol: "ADMIN",
-      tipoUsuario: "STAFF",
       activo: true
     }
   });
