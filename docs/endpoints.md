@@ -1,13 +1,42 @@
 # Endpoints — VetExpert
 
+## Cambio de Alcance
+
+VetExpert queda definido como sistema exclusivamente administrativo/staff.
+
+Roles activos finales:
+
+* `ADMIN`
+* `VETERINARIO`
+* `SECRETARIA`
+
+Los clientes ya no serán usuarios autenticados. Se conservan únicamente como registros administrativos internos asociados a mascotas, citas e historia clínica.
+
+Quedan fuera de alcance y deben retirarse en la fase de reestructuración:
+
+* Login cliente.
+* Registro público cliente.
+* Recuperación cliente.
+* Portal cliente.
+* Flujo multiportal.
+
+---
+
 # Auth
 
 POST /api/auth/staff/login
-POST /api/auth/clientes/login
-POST /api/auth/clientes/registro
 POST /api/auth/refresh
-POST /api/auth/recuperar
 GET /api/auth/perfil
+
+## Auth - Endpoints heredados a retirar
+
+Los siguientes endpoints existen en la implementación actual, pero quedan marcados para eliminación/refactor en la reestructuración staff-only:
+
+* `POST /api/auth/clientes/login`
+* `POST /api/auth/clientes/registro`
+* `POST /api/auth/recuperar` si permanece orientado a recuperación cliente.
+
+La recuperación de contraseña, si se conserva, debe quedar limitada a staff y revisarse como flujo administrativo.
 
 ---
 
@@ -17,13 +46,48 @@ POST /api/contacto/mensajes
 
 ---
 
+# Staff - Futuro
+
+Gestión administrativa pendiente para Fase 10.
+
+Endpoints propuestos:
+
+* `GET /api/staff`
+* `GET /api/staff/:id`
+* `POST /api/staff`
+* `PATCH /api/staff/:id`
+* `PATCH /api/staff/:id/activar`
+* `PATCH /api/staff/:id/inactivar`
+
+Reglas previstas:
+
+* Solo `ADMIN` puede crear, editar, activar o inactivar staff.
+* Roles gestionables: `VETERINARIO`, `SECRETARIA` y, si se decide, `ADMIN`.
+* No debe existir registro público de staff.
+* Debe integrarse con login staff y control de acceso.
+
+---
+
 # Clientes
+
+Clientes representa dueños de mascotas como registros administrativos internos. No deben interpretarse como cuentas autenticables ni como usuarios con acceso al sistema.
 
 GET /api/clientes
 GET /api/clientes/:id
 POST /api/clientes
 PATCH /api/clientes/:id
 DELETE /api/clientes/:id
+
+## Clientes - Refactor pendiente
+
+La implementación actual usa temporalmente `Usuario` con `tipoUsuario: CLIENTE` y `rol: CLIENTE` para representar dueños. Esto queda marcado como deuda técnica por el cambio de alcance.
+
+Objetivo de reestructuración:
+
+* Separar conceptualmente cliente administrativo de usuario autenticado.
+* Eliminar password/hash y rol autenticable del flujo de clientes.
+* Conservar relaciones con mascotas, citas e historias clínicas.
+* Mantener validaciones Perú de DNI, celular y correo.
 
 ---
 
@@ -168,7 +232,8 @@ Modulo de gestion de citas con JWT, roles, filtros, paginacion y soft delete.
 
 * La fecha de la cita no puede ser pasada al crear o reprogramar.
 * La mascota debe existir, estar activa y no estar eliminada logicamente.
-* El veterinario debe existir, estar activo, no estar eliminado, tener `tipoUsuario: STAFF` y `rol: VETERINARIO`.
+* El veterinario debe existir, estar activo, no estar eliminado y tener rol `VETERINARIO`.
+* Durante la migracion staff-only, cualquier validacion actual basada en `tipoUsuario: STAFF` debe revisarse para conservar solo usuarios staff autenticables.
 * El `clienteId` no se recibe desde el frontend: se asigna automaticamente desde la mascota seleccionada.
 * Se evita doble reserva exacta del veterinario validando `veterinarioId + fecha` en citas no eliminadas.
 * La eliminacion es logica mediante `eliminadoEn`.
@@ -369,7 +434,8 @@ Modulo de historial medico generado exclusivamente desde citas `COMPLETADA`.
 * `mascotaId` y `veterinarioId` se derivan automaticamente desde la cita.
 * La cita debe existir y no estar eliminada.
 * La mascota asociada debe estar activa y no eliminada.
-* El veterinario asociado debe estar activo, no eliminado, ser `STAFF` y tener rol `VETERINARIO`.
+* El veterinario asociado debe estar activo, no eliminado y tener rol `VETERINARIO`.
+* Durante la reestructuracion staff-only se debe retirar cualquier dependencia residual de `tipoUsuario` en reglas de negocio que ya queden cubiertas por roles staff.
 * Una historia cerrada no puede editarse.
 * Solo `ADMIN` puede reabrir historias cerradas.
 * La eliminacion es logica mediante `eliminadoEn`.

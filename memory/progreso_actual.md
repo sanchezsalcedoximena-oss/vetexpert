@@ -4,6 +4,30 @@
 
 Proyecto funcionando correctamente en entorno local.
 
+## Cambio de Alcance Confirmado
+
+VetExpert queda redefinido como sistema exclusivamente administrativo/staff.
+
+Roles activos finales:
+
+* `ADMIN`
+* `VETERINARIO`
+* `SECRETARIA`
+
+Fuera de alcance:
+
+* Portal cliente.
+* Login cliente.
+* Registro público cliente.
+* Autenticación cliente.
+* Recuperación cliente orientada a cliente.
+* Acceso cliente.
+* Flujo multiportal.
+
+Los clientes se conservan únicamente como registros administrativos internos: dueños de mascotas, datos de contacto, relación con citas e historia clínica.
+
+Antes de nuevas fases funcionales se debe ejecutar una reestructuración auth/roles para retirar el concepto de cliente autenticado.
+
 ## Backend
 
 * NestJS funcionando.
@@ -34,17 +58,27 @@ Proyecto funcionando correctamente en entorno local.
 ## Autenticacion implementada
 
 * Login staff JWT.
-* Login cliente JWT.
+* Login cliente JWT implementado actualmente, pero marcado para eliminación.
 * Refresh token.
-* Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`, `CLIENTE`.
-* Registro cliente.
-* Recuperacion de contrasena preparada.
+* Roles actuales en código: `ADMIN`, `SECRETARIA`, `VETERINARIO`, `CLIENTE`.
+* Roles objetivo: `ADMIN`, `SECRETARIA`, `VETERINARIO`.
+* Registro cliente implementado actualmente, pero marcado para eliminación.
+* Recuperacion de contrasena preparada; debe revisarse y limitarse a staff si se conserva.
 * Guards JWT backend.
 * Guards frontend para rutas privadas.
 * Hash bcryptjs.
 * Persistencia JWT frontend.
 * Interceptor Axios con refresh automatico.
 * Logout frontend.
+
+Deuda por nuevo alcance:
+
+* Eliminar `POST /api/auth/clientes/login`.
+* Eliminar `POST /api/auth/clientes/registro`.
+* Eliminar pantallas `/portal/login`, `/portal/registro`, `/login`, `/registro` cliente.
+* Limpiar tipos frontend que incluyen `CLIENTE`.
+* Ajustar cookies/storage que guardan `tipoUsuario`.
+* Revisar si `POST /api/auth/recuperar` se conserva solo para staff.
 
 ## Landing Page implementada
 
@@ -77,6 +111,12 @@ Proyecto funcionando correctamente en entorno local.
 * Seed idempotente probado: no duplica usuario.
 
 ## Gestion Clientes implementada
+
+Nota de alcance:
+
+* Clientes ya no serán usuarios autenticados.
+* Deben quedar como registros administrativos internos.
+* La implementación actual usa `Usuario` con `tipoUsuario: CLIENTE` y `rol: CLIENTE`; esto queda marcado para refactor/migración.
 
 Backend:
 
@@ -119,7 +159,8 @@ Backend:
 * Busqueda libre (en nombre mascota, raza, nombre/apellido/DNI del cliente).
 * Filtros por especie, estado y clienteId.
 * Soft delete (activo = false y eliminadoEn).
-* Validacion de existencia, rol CLIENTE y estado activo del dueño (clienteId).
+* Validacion actual de existencia, tipo/rol cliente y estado activo del dueño (`clienteId`).
+* Pendiente: refactorizar validacion para cliente administrativo no autenticable.
 * Guards JWT.
 * Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`.
 
@@ -255,12 +296,15 @@ Migraciones aplicadas:
 Auth:
 
 * `POST /api/auth/staff/login`
-* `POST /api/auth/clientes/login`
 * `POST /api/auth/staff/google`
-* `POST /api/auth/clientes/registro`
 * `POST /api/auth/refresh`
-* `POST /api/auth/recuperar`
 * `GET /api/auth/perfil`
+
+Auth heredado a retirar por nuevo alcance:
+
+* `POST /api/auth/clientes/login`
+* `POST /api/auth/clientes/registro`
+* `POST /api/auth/recuperar` si permanece orientado a cliente; si se conserva debe limitarse a staff.
 
 Contacto:
 
@@ -323,7 +367,52 @@ Completado:
 
 Proxima fase funcional:
 
-* Fase 09 - Portal cliente
+* Fase 09 - Reestructuracion auth/roles y alcance staff-only
+
+## Plan de Migracion Staff-only
+
+Eliminar:
+
+* Portal cliente y rutas `/portal/login`, `/portal/registro`.
+* Login/registro cliente en backend y frontend.
+* Tipos `CLIENTE` en sesión, navegación y guards frontend.
+* Registro público de clientes.
+* Recuperación de contraseña orientada a cliente.
+* Dependencia de password para clientes administrativos.
+
+Conservar:
+
+* Clientes como dueños de mascotas.
+* Relaciones actuales con mascotas, citas e historia clínica.
+* Validaciones Perú de DNI, celular y correo.
+* Login staff, refresh token, JWT, guards y roles staff.
+* Landing pública y formulario de contacto.
+
+Refactorizar:
+
+* Modelo conceptual de clientes para que no sean usuarios autenticables.
+* Validaciones de `clienteId` en mascotas/citas.
+* DTOs y services de clientes para remover contraseña.
+* Auth backend para roles finales `ADMIN`, `VETERINARIO`, `SECRETARIA`.
+* Frontend auth, proxy, cookies y localStorage.
+* Sidebar/dashboard para retirar permisos `CLIENTE`.
+
+Mover de fase:
+
+* Fase 09 deja de ser Portal cliente.
+* Fase 09 será reestructuración auth/roles staff-only.
+* Portal cliente queda eliminado del roadmap.
+* Gestión de staff pasa a la fase posterior inmediata.
+
+## Fases Futuras Reordenadas
+
+* Fase 09 - Reestructuración auth/roles staff-only.
+* Fase 10 - Gestión de staff.
+* Fase 11 - Correcciones UX/UI y limpieza operativa.
+* Fase 12 - Dashboard dinámico.
+* Fase 13 - Reportes.
+* Fase 14 - Configuración.
+* Fase 15 - Mantenimiento futuro.
 
 ## Estado UX/UI
 
@@ -331,7 +420,10 @@ Base visual funcional implementada con landing publica y dashboard moderno.
 
 Pendiente:
 
+* Reestructuración auth/roles staff-only.
+* Gestión administrativa de staff.
+* Correcciones UX/UI detectadas: validaciones visuales login, icono ojo contraseña, selector veterinarios en citas, limpieza auth.
+* Dashboard dinámico.
 * Animaciones avanzadas.
 * Charts.
 * Mejoras responsive avanzadas por modulo.
-* Fase 08 - Historia clinica.
