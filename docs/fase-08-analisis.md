@@ -893,6 +893,37 @@ En el detalle de mascota:
 * Integrar accion desde cita `COMPLETADA`.
 * Mostrar crear/ver historia segun existencia.
 * Integrar timeline en perfil o detalle de mascota.
+* Estado: implementado.
+* Backend de citas actualizado para exponer resumen `historiaClinica` en cada cita:
+  * `id`
+  * `cerrada`
+  * `eliminadoEn`
+* Frontend de citas actualizado:
+  * si la cita esta `COMPLETADA` y no tiene historia activa, muestra accion para crear historia clinica a `ADMIN` y `VETERINARIO`.
+  * si la cita esta `COMPLETADA` y ya tiene historia activa, muestra accion para ver historia clinica.
+  * `SECRETARIA` mantiene acceso de solo lectura.
+  * la creacion usa `HistoriaClinicaModal`.
+  * la visualizacion usa `HistoriaClinicaDetalleDrawer`.
+  * se mantienen toast notifications, loading state por cita y badges visuales de historia abierta/cerrada.
+
+### Fase 08.7 - Refinamiento y estabilizacion
+
+* Estado: implementado.
+* Alcance:
+  * No se agregaron funcionalidades grandes ni navegacion nueva.
+  * Se mantuvo el flujo dentro de mascotas y citas completadas.
+* Ajustes backend:
+  * La validacion de historia unica por cita ahora considera cualquier historia previa asociada al `citaId`, evitando errores de restriccion unica y devolviendo conflicto controlado.
+* Ajustes frontend:
+  * Tras crear historia desde una cita, se refresca citas, se cierra el drawer de cita obsoleto y se abre el detalle de la historia creada.
+  * Se bloquean acciones clinicas duplicadas mientras una accion esta en curso.
+  * Las citas con historia anulada muestran badge especifico y no ofrecen recreacion visual.
+  * El modal de historia clinica valida explicitamente que exista `citaId` al crear e historia valida al editar.
+  * Se mejoro el manejo de overflow en textos largos dentro de drawers y detalle.
+  * Acciones de timeline ahora se deshabilitan temporalmente durante cierre/reapertura.
+* Validacion:
+  * Frontend typecheck correcto.
+  * Backend typecheck correcto.
 
 ---
 

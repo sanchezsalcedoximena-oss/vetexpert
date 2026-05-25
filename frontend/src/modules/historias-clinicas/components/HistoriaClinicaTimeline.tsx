@@ -31,6 +31,7 @@ export function HistoriaClinicaTimeline({ citaIdParaCrear, mascotaId, notificar 
   const [cargando, setCargando] = useState(true);
   const [modal, setModal] = useState<{ modo: "crear" | "editar"; historia?: HistoriaClinica }>();
   const [detalle, setDetalle] = useState<HistoriaClinica>();
+  const [accionHistoriaId, setAccionHistoriaId] = useState<string>();
   const [usuario, setUsuario] = useState<UsuarioSesion>();
   const puedeEscribir = usuario?.rol === "ADMIN" || usuario?.rol === "VETERINARIO";
   const puedeCrear = puedeEscribir && Boolean(citaIdParaCrear);
@@ -61,22 +62,36 @@ export function HistoriaClinicaTimeline({ citaIdParaCrear, mascotaId, notificar 
   }
 
   async function cerrarHistoria(historia: HistoriaClinica) {
+    if (accionHistoriaId) {
+      return;
+    }
+
     try {
+      setAccionHistoriaId(historia.id);
       await cerrarHistoriaClinica(historia.id);
       notificar?.({ tipo: "exito", mensaje: "Historia clinica cerrada." });
       await cargarHistorias();
     } catch {
       notificar?.({ tipo: "error", mensaje: "No pudimos cerrar la historia clinica." });
+    } finally {
+      setAccionHistoriaId(undefined);
     }
   }
 
   async function reabrirHistoria(historia: HistoriaClinica) {
+    if (accionHistoriaId) {
+      return;
+    }
+
     try {
+      setAccionHistoriaId(historia.id);
       await reabrirHistoriaClinica(historia.id);
       notificar?.({ tipo: "exito", mensaje: "Historia clinica reabierta." });
       await cargarHistorias();
     } catch {
       notificar?.({ tipo: "error", mensaje: "No pudimos reabrir la historia clinica." });
+    } finally {
+      setAccionHistoriaId(undefined);
     }
   }
 
@@ -103,6 +118,7 @@ export function HistoriaClinicaTimeline({ citaIdParaCrear, mascotaId, notificar 
             <motion.div key={historia.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
               <HistoriaClinicaTimelineItem
                 historia={historia}
+                accionEnCurso={Boolean(accionHistoriaId)}
                 puedeCerrar={puedeEscribir && !historia.cerrada}
                 puedeEditar={puedeEscribir && !historia.cerrada}
                 puedeReabrir={usuario?.rol === "ADMIN" && historia.cerrada}

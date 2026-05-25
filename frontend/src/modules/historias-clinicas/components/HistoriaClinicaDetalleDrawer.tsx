@@ -17,7 +17,7 @@ export function HistoriaClinicaDetalleDrawer({ cerrar, historia }: HistoriaClini
     <motion.div className="fixed inset-0 z-50 flex justify-end bg-slate-950/55" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <motion.aside className="h-full w-full max-w-lg overflow-y-auto bg-superficie p-5" initial={{ x: 480 }} animate={{ x: 0 }} exit={{ x: 480 }}>
         <div className="mb-6 flex items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-xl font-bold">Detalle historia clinica</h2>
             <p className="mt-1 text-sm text-texto/60">{formatearFecha(historia.fecha)}</p>
           </div>
@@ -28,8 +28,8 @@ export function HistoriaClinicaDetalleDrawer({ cerrar, historia }: HistoriaClini
 
         <div className="space-y-4 text-sm">
           <div className="flex items-center gap-3 rounded-md border border-borde bg-fondo p-4">
-            <Stethoscope className="h-8 w-8 text-primario" />
-            <div>
+            <Stethoscope className="h-8 w-8 shrink-0 text-primario" />
+            <div className="min-w-0">
               <p className="text-lg font-bold">{historia.mascota.nombre}</p>
               <p className="text-sm text-texto/60">{historia.mascota.raza ?? historia.mascota.especie}</p>
               <div className="mt-2">
@@ -60,7 +60,7 @@ function DetalleItem({ icono, label, value }: { icono?: ReactNode; label: string
         {icono}
         <p className="text-xs font-bold uppercase text-texto/45">{label}</p>
       </div>
-      <p className="mt-1 font-semibold">{value}</p>
+      <p className="mt-1 break-words font-semibold">{value}</p>
     </div>
   );
 }
@@ -69,7 +69,7 @@ function DetalleTexto({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-borde bg-fondo p-3">
       <p className="text-xs font-bold uppercase text-texto/45">{label}</p>
-      <p className="mt-2 whitespace-pre-wrap leading-6 text-texto/78">{value}</p>
+      <p className="mt-2 whitespace-pre-wrap break-words leading-6 text-texto/78">{value}</p>
     </div>
   );
 }

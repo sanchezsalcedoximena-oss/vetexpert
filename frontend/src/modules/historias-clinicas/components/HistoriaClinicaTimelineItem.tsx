@@ -5,6 +5,7 @@ import type { HistoriaClinica } from "@/services/historias-clinicas";
 import { HistoriaClinicaBadge } from "./HistoriaClinicaBadge";
 
 type HistoriaClinicaTimelineItemProps = {
+  accionEnCurso: boolean;
   historia: HistoriaClinica;
   puedeEditar: boolean;
   puedeCerrar: boolean;
@@ -16,6 +17,7 @@ type HistoriaClinicaTimelineItemProps = {
 };
 
 export function HistoriaClinicaTimelineItem({
+  accionEnCurso,
   historia,
   onCerrar,
   onEditar,
@@ -41,22 +43,22 @@ export function HistoriaClinicaTimelineItem({
             Vet. {historia.veterinario.nombres} {historia.veterinario.apellidos}
           </p>
         </div>
-        <div className="flex shrink-0 gap-2 sm:justify-end">
-          <Button aria-label="Ver detalle" size="icon" title="Ver detalle" type="button" variant="ghost" onClick={() => onVerDetalle(historia)}>
+        <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+          <Button aria-label="Ver detalle" disabled={accionEnCurso} size="icon" title="Ver detalle" type="button" variant="ghost" onClick={() => onVerDetalle(historia)}>
             <Eye className="h-4 w-4" />
           </Button>
           {puedeEditar ? (
-            <Button aria-label="Editar" size="icon" title="Editar" type="button" variant="ghost" onClick={() => onEditar(historia)}>
+            <Button aria-label="Editar" disabled={accionEnCurso} size="icon" title="Editar" type="button" variant="ghost" onClick={() => onEditar(historia)}>
               <FilePenLine className="h-4 w-4" />
             </Button>
           ) : null}
           {puedeCerrar ? (
-            <Button aria-label="Cerrar historia" size="icon" title="Cerrar historia" type="button" variant="ghost" onClick={() => onCerrar(historia)}>
+            <Button aria-label="Cerrar historia" disabled={accionEnCurso} size="icon" title="Cerrar historia" type="button" variant="ghost" onClick={() => onCerrar(historia)}>
               <Lock className="h-4 w-4" />
             </Button>
           ) : null}
           {puedeReabrir ? (
-            <Button aria-label="Reabrir historia" size="icon" title="Reabrir historia" type="button" variant="ghost" onClick={() => onReabrir(historia)}>
+            <Button aria-label="Reabrir historia" disabled={accionEnCurso} size="icon" title="Reabrir historia" type="button" variant="ghost" onClick={() => onReabrir(historia)}>
               <RotateCcw className="h-4 w-4" />
             </Button>
           ) : null}

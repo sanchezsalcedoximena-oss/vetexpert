@@ -167,6 +167,7 @@ Frontend:
 
 * `/dashboard/citas`.
 * Service `frontend/src/services/citas.ts` conectado a endpoints reales.
+* Tipo `Cita` actualizado con resumen `historiaClinica` para flujo clinico.
 * Tabla responsive en desktop y tarjetas en mobile.
 * Filtros por busqueda, estado, veterinario y rango de fechas.
 * Paginacion funcional.
@@ -175,6 +176,10 @@ Frontend:
 * Selector de veterinario compatible con los datos disponibles del backend actual.
 * Drawer lateral con detalle completo de cita, paciente, dueno y veterinario.
 * Badges visuales para estados de cita.
+* Accion contextual en citas `COMPLETADA`: crear historia clinica si no existe o ver historia si ya existe.
+* Modal de creacion de historia clinica integrado desde citas completadas.
+* Drawer de detalle de historia clinica integrado desde citas completadas.
+* Refinamiento 08.7: sincronizacion posterior a creacion desde cita, bloqueo de doble accion clinica y feedback para historias anuladas.
 * Alertas Toast animadas.
 * Skeleton loaders.
 * Confirmacion de borrado.
@@ -220,7 +225,13 @@ Frontend:
 * Badges visuales `Abierta`/`Cerrada`.
 * Skeleton loaders, empty state, loading states, toast notifications y animaciones suaves.
 * Permisos UI aplicados: `SECRETARIA` solo lectura, `VETERINARIO` edita/cierra historias abiertas, `ADMIN` puede reabrir.
-* Integracion desde citas completadas pendiente para Fase 08.6.
+* Integracion desde citas completadas implementada en Fase 08.6.
+* Refinamiento 08.7 implementado:
+  * Prevencion de acciones duplicadas al cerrar/reabrir/ver historias.
+  * Mejor manejo visual de historias anuladas en citas completadas.
+  * Modal de historia clinica endurecido contra edicion sin registro valido.
+  * Mejoras de overflow y textos largos en drawers y timeline.
+  * Backend devuelve conflicto controlado si una cita ya tuvo historia clinica registrada.
 
 ## Prisma
 
@@ -307,10 +318,12 @@ Completado:
 * Fase 08.3 - Endpoints historia clinica
 * Fase 08.4 - Frontend services historia clinica
 * Fase 08.5 - Timeline UI historia clinica
+* Fase 08.6 - Integracion historia clinica desde citas completadas
+* Fase 08.7 - Refinamiento y estabilizacion historia clinica
 
 Proxima fase funcional:
 
-* Fase 08.6 - Integracion historia clinica desde citas completadas
+* Fase 09 - Portal cliente
 
 ## Estado UX/UI
 

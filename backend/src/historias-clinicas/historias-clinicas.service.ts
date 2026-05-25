@@ -266,8 +266,7 @@ export class HistoriasClinicasService {
   private async validarHistoriaUnicaPorCita(citaId: string) {
     const existe = await this.prisma.historiaClinica.findFirst({
       where: {
-        citaId,
-        eliminadoEn: null
+        citaId
       }
     });
 

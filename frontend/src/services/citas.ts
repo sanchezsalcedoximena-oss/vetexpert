@@ -30,6 +30,11 @@ export type Cita = {
     dni: string | null;
     celular: string | null;
   };
+  historiaClinica: {
+    id: string;
+    cerrada: boolean;
+    eliminadoEn: string | null;
+  } | null;
   creadoEn: string;
   actualizadoEn: string;
 };

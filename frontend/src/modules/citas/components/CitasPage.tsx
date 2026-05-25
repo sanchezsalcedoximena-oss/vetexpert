@@ -1,13 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarClock, Check, Eye, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { CalendarClock, Check, Eye, FileText, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
+import { HistoriaClinicaDetalleDrawer } from "@/modules/historias-clinicas/components/HistoriaClinicaDetalleDrawer";
+import { HistoriaClinicaModal } from "@/modules/historias-clinicas/components/HistoriaClinicaModal";
 import { obtenerUsuarioSesion } from "@/services/auth";
 import { listarClientes, type Cliente } from "@/services/clientes";
 import {
@@ -19,6 +21,7 @@ import {
   type CitasMeta,
   type EstadoCita
 } from "@/services/citas";
+import { obtenerHistoriaClinica, type HistoriaClinica } from "@/services/historias-clinicas";
 import { listarMascotas, type Mascota } from "@/services/mascotas";
 
 const estadosCita: EstadoCita[] = ["PENDIENTE", "CONFIRMADA", "COMPLETADA", "CANCELADA"];
@@ -74,13 +77,17 @@ export function CitasPage() {
   const [pagina, setPagina] = useState(1);
   const [cargando, setCargando] = useState(true);
   const [modal, setModal] = useState<{ modo: "crear" | "editar"; cita?: Cita }>();
+  const [modalHistoria, setModalHistoria] = useState<{ modo: "crear"; cita: Cita }>();
   const [detalle, setDetalle] = useState<Cita>();
+  const [detalleHistoria, setDetalleHistoria] = useState<HistoriaClinica>();
   const [toast, setToast] = useState<Toast>();
   const [usuario, setUsuario] = useState<UsuarioSesion>();
+  const [historiaCargandoId, setHistoriaCargandoId] = useState<string>();
 
   const busquedaNormalizada = useMemo(() => busqueda.trim(), [busqueda]);
   const veterinarios = useMemo(() => obtenerVeterinariosDesdeCitas(citas, usuario), [citas, usuario]);
   const puedeGestionar = usuario?.rol === "ADMIN" || usuario?.rol === "SECRETARIA";
+  const puedeCrearHistoria = usuario?.rol === "ADMIN" || usuario?.rol === "VETERINARIO";
 
   useEffect(() => {
     setUsuario(obtenerUsuarioSesion());
@@ -138,6 +145,39 @@ export function CitasPage() {
     } catch {
       setToast({ tipo: "error", mensaje: "No pudimos eliminar la cita." });
     }
+  }
+
+  async function gestionarHistoria(cita: Cita) {
+    if (historiaCargandoId) {
+      return;
+    }
+
+    const historia = obtenerHistoriaActiva(cita);
+
+    if (historia) {
+      try {
+        setHistoriaCargandoId(cita.id);
+        const detalle = await obtenerHistoriaClinica(historia.id);
+        setDetalleHistoria(detalle);
+      } catch {
+        setToast({ tipo: "error", mensaje: "No pudimos abrir la historia clinica." });
+      } finally {
+        setHistoriaCargandoId(undefined);
+      }
+      return;
+    }
+
+    if (cita.estado !== "COMPLETADA") {
+      setToast({ tipo: "error", mensaje: "Solo una cita completada puede generar historia clinica." });
+      return;
+    }
+
+    if (!puedeCrearHistoria) {
+      setToast({ tipo: "error", mensaje: "No tienes permisos para crear historias clinicas." });
+      return;
+    }
+
+    setModalHistoria({ modo: "crear", cita });
   }
 
   return (
@@ -226,7 +266,10 @@ export function CitasPage() {
         citas={citas}
         editar={(cita) => setModal({ modo: "editar", cita })}
         eliminar={confirmarEliminar}
+        gestionarHistoria={gestionarHistoria}
+        historiaCargandoId={historiaCargandoId}
         puedeEliminar={puedeGestionar}
+        puedeCrearHistoria={puedeCrearHistoria}
         verDetalle={setDetalle}
       />
 
@@ -259,7 +302,22 @@ export function CitasPage() {
             }}
           />
         ) : null}
-        {detalle ? <DetalleCita cita={detalle} cerrar={() => setDetalle(undefined)} /> : null}
+        {detalle ? <DetalleCita cita={detalle} cerrar={() => setDetalle(undefined)} gestionarHistoria={gestionarHistoria} historiaCargandoId={historiaCargandoId} puedeCrearHistoria={puedeCrearHistoria} /> : null}
+        {modalHistoria ? (
+          <HistoriaClinicaModal
+            citaId={modalHistoria.cita.id}
+            modo="crear"
+            cerrar={() => setModalHistoria(undefined)}
+            guardado={async (historia) => {
+              setModalHistoria(undefined);
+              setDetalle(undefined);
+              setDetalleHistoria(historia);
+              setToast({ tipo: "exito", mensaje: "Historia clinica creada." });
+              await cargarCitas();
+            }}
+          />
+        ) : null}
+        {detalleHistoria ? <HistoriaClinicaDetalleDrawer historia={detalleHistoria} cerrar={() => setDetalleHistoria(undefined)} /> : null}
       </AnimatePresence>
     </div>
   );
@@ -270,6 +328,9 @@ function CitasTable({
   citas,
   editar,
   eliminar,
+  gestionarHistoria,
+  historiaCargandoId,
+  puedeCrearHistoria,
   puedeEliminar,
   verDetalle
 }: {
@@ -277,6 +338,9 @@ function CitasTable({
   citas: Cita[];
   editar: (cita: Cita) => void;
   eliminar: (cita: Cita) => void;
+  gestionarHistoria: (cita: Cita) => void;
+  historiaCargandoId?: string;
+  puedeCrearHistoria: boolean;
   puedeEliminar: boolean;
   verDetalle: (cita: Cita) => void;
 }) {
@@ -333,9 +397,23 @@ function CitasTable({
                 <td className="px-4 py-3">{cita.veterinario.nombres} {cita.veterinario.apellidos}</td>
                 <td className="px-4 py-3">
                   <EstadoCitaBadge estado={cita.estado} />
+                  {cita.estado === "COMPLETADA" ? (
+                    <p className="mt-2">
+                      <HistoriaCitaBadge cita={cita} />
+                    </p>
+                  ) : null}
                 </td>
                 <td className="px-4 py-3">
-                  <Acciones cita={cita} editar={editar} eliminar={eliminar} puedeEliminar={puedeEliminar} verDetalle={verDetalle} />
+                  <Acciones
+                    cita={cita}
+                    editar={editar}
+                    eliminar={eliminar}
+                    gestionarHistoria={gestionarHistoria}
+                    historiaCargandoId={historiaCargandoId}
+                    puedeCrearHistoria={puedeCrearHistoria}
+                    puedeEliminar={puedeEliminar}
+                    verDetalle={verDetalle}
+                  />
                 </td>
               </tr>
             ))}
@@ -357,8 +435,22 @@ function CitasTable({
               <p><span className="text-texto/50">Veterinario</span><br />{cita.veterinario.nombres} {cita.veterinario.apellidos}</p>
             </div>
             <p className="mt-3 text-sm text-texto/70">{cita.motivo}</p>
+            {cita.estado === "COMPLETADA" ? (
+              <p className="mt-3">
+                <HistoriaCitaBadge cita={cita} />
+              </p>
+            ) : null}
             <div className="mt-4">
-              <Acciones cita={cita} editar={editar} eliminar={eliminar} puedeEliminar={puedeEliminar} verDetalle={verDetalle} />
+              <Acciones
+                cita={cita}
+                editar={editar}
+                eliminar={eliminar}
+                gestionarHistoria={gestionarHistoria}
+                historiaCargandoId={historiaCargandoId}
+                puedeCrearHistoria={puedeCrearHistoria}
+                puedeEliminar={puedeEliminar}
+                verDetalle={verDetalle}
+              />
             </div>
           </article>
         ))}
@@ -371,20 +463,43 @@ function Acciones({
   cita,
   editar,
   eliminar,
+  gestionarHistoria,
+  historiaCargandoId,
+  puedeCrearHistoria,
   puedeEliminar,
   verDetalle
 }: {
   cita: Cita;
   editar: (cita: Cita) => void;
   eliminar: (cita: Cita) => void;
+  gestionarHistoria: (cita: Cita) => void;
+  historiaCargandoId?: string;
+  puedeCrearHistoria: boolean;
   puedeEliminar: boolean;
   verDetalle: (cita: Cita) => void;
 }) {
+  const historia = obtenerHistoriaActiva(cita);
+  const tieneHistoriaAnulada = Boolean(cita.historiaClinica?.eliminadoEn);
+  const puedeMostrarHistoria = cita.estado === "COMPLETADA" && (Boolean(historia) || (puedeCrearHistoria && !tieneHistoriaAnulada));
+
   return (
-    <div className="flex justify-end gap-2">
+    <div className="flex flex-wrap justify-end gap-2">
       <Button aria-label="Ver detalle" size="icon" title="Ver detalle" type="button" variant="ghost" onClick={() => verDetalle(cita)}>
         <Eye className="h-4 w-4" />
       </Button>
+      {puedeMostrarHistoria ? (
+        <Button
+          aria-label={historia ? "Ver historia clinica" : "Crear historia clinica"}
+          disabled={Boolean(historiaCargandoId)}
+          size="icon"
+          title={historia ? "Ver historia clinica" : "Crear historia clinica"}
+          type="button"
+          variant="ghost"
+          onClick={() => gestionarHistoria(cita)}
+        >
+          {historiaCargandoId === cita.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
+        </Button>
+      ) : null}
       <Button aria-label="Editar" size="icon" title="Editar" type="button" variant="ghost" onClick={() => editar(cita)}>
         <Pencil className="h-4 w-4" />
       </Button>
@@ -710,7 +825,23 @@ function CitaModal({
   );
 }
 
-function DetalleCita({ cerrar, cita }: { cerrar: () => void; cita: Cita }) {
+function DetalleCita({
+  cerrar,
+  cita,
+  gestionarHistoria,
+  historiaCargandoId,
+  puedeCrearHistoria
+}: {
+  cerrar: () => void;
+  cita: Cita;
+  gestionarHistoria: (cita: Cita) => void;
+  historiaCargandoId?: string;
+  puedeCrearHistoria: boolean;
+}) {
+  const historia = obtenerHistoriaActiva(cita);
+  const tieneHistoriaAnulada = Boolean(cita.historiaClinica?.eliminadoEn);
+  const puedeMostrarHistoria = cita.estado === "COMPLETADA" && (Boolean(historia) || (puedeCrearHistoria && !tieneHistoriaAnulada));
+
   return (
     <motion.div className="fixed inset-0 z-50 flex justify-end bg-slate-950/55" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <motion.aside className="h-full w-full max-w-md overflow-y-auto bg-superficie p-5" initial={{ x: 420 }} animate={{ x: 0 }} exit={{ x: 420 }}>
@@ -735,6 +866,20 @@ function DetalleCita({ cerrar, cita }: { cerrar: () => void; cita: Cita }) {
           <DetalleItem label="Correo veterinario" value={cita.veterinario.correo} />
           <DetalleItem label="Motivo" value={cita.motivo} />
           <DetalleItem label="Observaciones" value={cita.observaciones ?? "-"} />
+          {cita.estado === "COMPLETADA" ? (
+            <div className="rounded-md border border-borde bg-fondo p-3">
+              <p className="text-xs font-bold uppercase text-texto/45">Historia clinica</p>
+              <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <HistoriaCitaBadge cita={cita} />
+                {puedeMostrarHistoria ? (
+                  <Button disabled={Boolean(historiaCargandoId)} size="sm" type="button" onClick={() => gestionarHistoria(cita)}>
+                    {historiaCargandoId === cita.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
+                    {historia ? "Ver historia clinica" : "Crear historia clinica"}
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
         </div>
       </motion.aside>
     </motion.div>
@@ -762,7 +907,7 @@ function DetalleItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-borde bg-fondo p-3">
       <p className="text-xs font-bold uppercase text-texto/45">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+      <p className="mt-1 break-words font-semibold">{value}</p>
     </div>
   );
 }
@@ -776,6 +921,28 @@ function EstadoCitaBadge({ estado }: { estado: EstadoCita }) {
   };
 
   return <span className={cn("inline-flex rounded-md px-2 py-1 text-xs font-bold", estilos[estado])}>{formatearEstado(estado)}</span>;
+}
+
+function HistoriaCitaBadge({ cita }: { cita: Cita }) {
+  const historia = obtenerHistoriaActiva(cita);
+
+  if (historia) {
+    return (
+      <span className={cn("inline-flex rounded-md px-2 py-1 text-xs font-bold", historia.cerrada ? "bg-exito/10 text-exito" : "bg-amber-500/10 text-amber-600")}>
+        Historia {historia.cerrada ? "cerrada" : "abierta"}
+      </span>
+    );
+  }
+
+  if (cita.historiaClinica?.eliminadoEn) {
+    return <span className="inline-flex rounded-md bg-red-500/10 px-2 py-1 text-xs font-bold text-red-600">Historia anulada</span>;
+  }
+
+  return <span className="inline-flex rounded-md bg-primario/10 px-2 py-1 text-xs font-bold text-primario">Sin historia clinica</span>;
+}
+
+function obtenerHistoriaActiva(cita: Cita) {
+  return cita.historiaClinica && !cita.historiaClinica.eliminadoEn ? cita.historiaClinica : null;
 }
 
 function ToastView({ toast }: { toast?: Toast }) {

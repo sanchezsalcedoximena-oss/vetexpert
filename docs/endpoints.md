@@ -172,6 +172,7 @@ Modulo de gestion de citas con JWT, roles, filtros, paginacion y soft delete.
 * El `clienteId` no se recibe desde el frontend: se asigna automaticamente desde la mascota seleccionada.
 * Se evita doble reserva exacta del veterinario validando `veterinarioId + fecha` en citas no eliminadas.
 * La eliminacion es logica mediante `eliminadoEn`.
+* Las respuestas de citas incluyen un resumen `historiaClinica` para indicar si una cita completada ya tiene registro clinico activo.
 
 ### GET /api/citas
 Listar citas con paginacion, busqueda libre y filtros.
@@ -226,6 +227,11 @@ Listar citas con paginacion, busqueda libre y filtros.
           "dni": "12345678",
           "celular": "987654321"
         },
+        "historiaClinica": {
+          "id": "uuid-historia",
+          "cerrada": false,
+          "eliminadoEn": null
+        },
         "creadoEn": "2026-05-25T10:00:00.000Z",
         "actualizadoEn": "2026-05-25T10:00:00.000Z"
       }
@@ -275,6 +281,11 @@ Obtener el detalle de una cita especifica.
       "apellidos": "Perez",
       "dni": "12345678",
       "celular": "987654321"
+    },
+    "historiaClinica": {
+      "id": "uuid-historia",
+      "cerrada": false,
+      "eliminadoEn": null
     },
     "creadoEn": "2026-05-25T10:00:00.000Z",
     "actualizadoEn": "2026-05-25T10:00:00.000Z"

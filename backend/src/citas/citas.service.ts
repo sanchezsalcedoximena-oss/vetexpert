@@ -288,6 +288,13 @@ export class CitasService {
           celular: true
         }
       },
+      historiaClinica: {
+        select: {
+          id: true,
+          cerrada: true,
+          eliminadoEn: true
+        }
+      },
       creadoEn: true,
       actualizadoEn: true
     } satisfies Prisma.CitaSelect;

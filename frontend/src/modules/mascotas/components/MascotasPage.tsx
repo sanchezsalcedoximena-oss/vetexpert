@@ -737,7 +737,7 @@ function DetalleItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-borde bg-fondo p-3">
       <p className="text-xs font-bold uppercase text-texto/45">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+      <p className="mt-1 break-words font-semibold">{value}</p>
     </div>
   );
 }

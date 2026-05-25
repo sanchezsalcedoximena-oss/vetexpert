@@ -49,29 +49,37 @@ export function HistoriaClinicaModal({ cerrar, citaId, guardado, historia, modo 
       return;
     }
 
-    if (modo === "crear" && !citaId) {
-      setErrores({ general: "Selecciona una cita completada para crear la historia clinica." });
-      return;
-    }
-
     try {
       setErrores({});
       setGuardando(true);
       const payload: HistoriaClinicaPayload = {
-        diagnostico: validacion.data.diagnostico,
-        tratamiento: validacion.data.tratamiento,
-        observaciones: validacion.data.observaciones || undefined,
+        diagnostico: validacion.data.diagnostico.trim(),
+        tratamiento: validacion.data.tratamiento.trim(),
+        observaciones: validacion.data.observaciones?.trim() || undefined,
         cerrada: validacion.data.cerrada
       };
 
-      const respuesta =
-        modo === "crear" && citaId
-          ? await crearHistoriaDesdeCita(citaId, payload)
-          : await actualizarHistoriaClinica(historia?.id ?? "", {
-              diagnostico: payload.diagnostico,
-              tratamiento: payload.tratamiento,
-              observaciones: payload.observaciones
-            });
+      let respuesta: HistoriaClinica;
+
+      if (modo === "crear") {
+        if (!citaId) {
+          setErrores({ general: "Selecciona una cita completada para crear la historia clinica." });
+          return;
+        }
+
+        respuesta = await crearHistoriaDesdeCita(citaId, payload);
+      } else {
+        if (!historia) {
+          setErrores({ general: "No se encontro la historia clinica para editar." });
+          return;
+        }
+
+        respuesta = await actualizarHistoriaClinica(historia.id, {
+          diagnostico: payload.diagnostico,
+          tratamiento: payload.tratamiento,
+          observaciones: payload.observaciones
+        });
+      }
 
       await guardado(respuesta);
     } catch {
