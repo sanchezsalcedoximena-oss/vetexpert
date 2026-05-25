@@ -210,7 +210,10 @@ Backend:
 
 Frontend:
 
-* Pendiente para Fase 08.4 en adelante.
+* Service `frontend/src/services/historias-clinicas.ts` conectado a endpoints reales.
+* Tipos `HistoriaClinica`, `HistoriaClinicaDetalle`, `HistoriaClinicaPayload`, `HistoriasClinicasQuery`, `HistoriasClinicasResponse` y `HistoriasClinicasMeta`.
+* Funciones de listado, detalle, creacion desde cita, actualizacion, cierre, reapertura y eliminacion.
+* Timeline UI, modales, drawers e integracion visual pendientes para Fase 08.5 en adelante.
 
 ## Prisma
 

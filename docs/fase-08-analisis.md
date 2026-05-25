@@ -863,6 +863,7 @@ En el detalle de mascota:
 * Crear `frontend/src/services/historias-clinicas.ts`.
 * Tipar payloads, queries, meta y responses.
 * Consumir endpoints reales.
+* Estado: implementado.
 
 ### Fase 08.5 - UI timeline
 
