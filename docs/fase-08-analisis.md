@@ -872,6 +872,21 @@ En el detalle de mascota:
 * Crear drawer de detalle.
 * Implementar badges abierta/cerrada.
 * Mantener dark mode y responsive mobile/desktop.
+* Estado: implementado.
+* Componentes creados:
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaTimeline.tsx`
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaTimelineItem.tsx`
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaModal.tsx`
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaDetalleDrawer.tsx`
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaEmptyState.tsx`
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaSkeleton.tsx`
+  * `frontend/src/modules/historias-clinicas/components/HistoriaClinicaBadge.tsx`
+* Integracion realizada dentro del drawer de detalle de mascota.
+* Permisos UI implementados:
+  * `SECRETARIA`: solo lectura.
+  * `VETERINARIO`: editar y cerrar historias abiertas visibles para su usuario.
+  * `ADMIN`: editar, cerrar y reabrir.
+* La creacion visual queda soportada por el modal cuando exista `citaId` de una cita completada; la exposicion de esa accion desde citas queda reservada para Fase 08.6.
 
 ### Fase 08.6 - Integracion citas
 

@@ -213,7 +213,14 @@ Frontend:
 * Service `frontend/src/services/historias-clinicas.ts` conectado a endpoints reales.
 * Tipos `HistoriaClinica`, `HistoriaClinicaDetalle`, `HistoriaClinicaPayload`, `HistoriasClinicasQuery`, `HistoriasClinicasResponse` y `HistoriasClinicasMeta`.
 * Funciones de listado, detalle, creacion desde cita, actualizacion, cierre, reapertura y eliminacion.
-* Timeline UI, modales, drawers e integracion visual pendientes para Fase 08.5 en adelante.
+* Componentes UI de timeline clinico implementados en `frontend/src/modules/historias-clinicas/components/`.
+* Timeline clinico integrado dentro del drawer de detalle de mascota.
+* Modal reutilizable de creacion/edicion de historia clinica preparado para creacion desde `citaId`.
+* Drawer de detalle de historia clinica implementado.
+* Badges visuales `Abierta`/`Cerrada`.
+* Skeleton loaders, empty state, loading states, toast notifications y animaciones suaves.
+* Permisos UI aplicados: `SECRETARIA` solo lectura, `VETERINARIO` edita/cierra historias abiertas, `ADMIN` puede reabrir.
+* Integracion desde citas completadas pendiente para Fase 08.6.
 
 ## Prisma
 
@@ -295,10 +302,15 @@ Completado:
 * Fase 05 - Gestion clientes
 * Fase 06 - Mascotas
 * Fase 07 - Citas
+* Fase 08.1 - Prisma historia clinica
+* Fase 08.2 - Backend modulo historia clinica
+* Fase 08.3 - Endpoints historia clinica
+* Fase 08.4 - Frontend services historia clinica
+* Fase 08.5 - Timeline UI historia clinica
 
 Proxima fase funcional:
 
-* Fase 08 - Historia clinica
+* Fase 08.6 - Integracion historia clinica desde citas completadas
 
 ## Estado UX/UI
 

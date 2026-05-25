@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
+import { HistoriaClinicaTimeline } from "@/modules/historias-clinicas/components/HistoriaClinicaTimeline";
 import { listarClientes, type Cliente } from "@/services/clientes";
 import {
   actualizarMascota,
@@ -260,7 +261,7 @@ export function MascotasPage() {
             }}
           />
         ) : null}
-        {detalle ? <DetalleMascota mascota={detalle} cerrar={() => setDetalle(undefined)} /> : null}
+        {detalle ? <DetalleMascota mascota={detalle} cerrar={() => setDetalle(undefined)} notificar={setToast} /> : null}
       </AnimatePresence>
     </div>
   );
@@ -694,10 +695,10 @@ function MascotaModal({
   );
 }
 
-function DetalleMascota({ cerrar, mascota }: { cerrar: () => void; mascota: Mascota }) {
+function DetalleMascota({ cerrar, mascota, notificar }: { cerrar: () => void; mascota: Mascota; notificar: (toast: Toast) => void }) {
   return (
     <motion.div className="fixed inset-0 z-50 flex justify-end bg-slate-950/55" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <motion.aside className="h-full w-full max-w-md overflow-y-auto bg-superficie p-5" initial={{ x: 420 }} animate={{ x: 0 }} exit={{ x: 420 }}>
+      <motion.aside className="h-full w-full max-w-2xl overflow-y-auto bg-superficie p-5" initial={{ x: 640 }} animate={{ x: 0 }} exit={{ x: 640 }}>
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-bold">Detalle mascota</h2>
           <Button aria-label="Cerrar" size="icon" type="button" variant="ghost" onClick={cerrar}>
@@ -725,6 +726,7 @@ function DetalleMascota({ cerrar, mascota }: { cerrar: () => void; mascota: Masc
           <DetalleItem label="Alergias" value={mascota.alergias ?? "Ninguna conocida"} />
           <DetalleItem label="Observaciones" value={mascota.observaciones ?? "-"} />
           <DetalleItem label="Estado" value={mascota.activo ? "Activo" : "Inactivo"} />
+          <HistoriaClinicaTimeline mascotaId={mascota.id} notificar={notificar} />
         </div>
       </motion.aside>
     </motion.div>
