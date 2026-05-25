@@ -369,6 +369,11 @@ Proxima fase funcional:
 
 * Fase 09 - Reestructuracion auth/roles y alcance staff-only
 
+Analisis previo creado:
+
+* `docs/fase-09-analisis.md`
+* Pendiente aprobacion explicita antes de implementar codigo o ejecutar migraciones.
+
 ## Plan de Migracion Staff-only
 
 Eliminar:
