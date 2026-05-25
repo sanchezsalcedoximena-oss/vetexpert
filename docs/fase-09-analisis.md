@@ -315,6 +315,26 @@ Mantener:
 * permisos `ADMIN`, `VETERINARIO`, `SECRETARIA`
 * restriccion de veterinario responsable
 
+### Contacto publico
+
+El formulario publico de contacto de la landing no pertenece al dominio de clientes administrativos ni al dominio auth.
+
+Reglas finales:
+
+* contacto publico no es cliente administrativo
+* contacto publico no es auth
+* contacto publico no es registro
+* contacto publico no crea entidades `Cliente`
+* contacto publico no crea usuarios
+* contacto publico no usa Prisma
+* contacto publico no genera JWT
+* contacto publico no genera sesiones
+* contacto publico no emite refresh tokens
+
+`Cliente` solo puede ser creado desde el dashboard staff interno, mediante el modulo administrativo de clientes y con permisos staff.
+
+El comportamiento backend actual relacionado a `ContactoModule`, `ContactoController`, `ContactoService`, `CrearMensajeContactoDto` y `MensajeContacto` queda marcado para ser retirado del flujo final de contacto publico. El formulario publico no debe persistir mensajes en PostgreSQL ni depender de `/api/contacto/mensajes`.
+
 ---
 
 ## 7. Cambios frontend requeridos
@@ -397,6 +417,59 @@ Mantener:
 * dark mode
 * responsive
 * estilo premium actual
+
+### Contacto publico en landing
+
+El formulario visual de contacto se mantiene en la landing publica, reutilizando la experiencia visual actual de `ContactForm`.
+
+Comportamiento final obligatorio:
+
+* no llamar a `frontend/src/services/contacto.ts`
+* no llamar a `/api/contacto/mensajes`
+* no crear `Cliente`
+* no crear `Usuario`
+* no iniciar sesion
+* no guardar datos en Prisma
+* abrir WhatsApp con `https://api.whatsapp.com/send/?phone=51946223649&text=`
+
+El texto enviado a WhatsApp debe construirse automaticamente con los campos del formulario:
+
+* nombres
+* celular
+* correo
+* asunto
+* mensaje
+
+La URL debe serializar y codificar correctamente el contenido usando codificacion de query string para que espacios, saltos de linea, simbolos y caracteres especiales no rompan el enlace.
+
+Formato conceptual del destino:
+
+```text
+https://api.whatsapp.com/send/?phone=51946223649&text={mensajeCodificado}
+```
+
+Formato conceptual del mensaje:
+
+```text
+Nombres: {nombres}
+Celular: {celular}
+Correo: {correo}
+Asunto: {asunto}
+Mensaje: {mensaje}
+```
+
+Referencias actuales a revisar al implementar:
+
+* `frontend/src/services/contacto.ts`
+* `frontend/src/modules/landing/components/ContactForm.tsx`
+* `frontend/src/modules/landing/components/LandingPage.tsx`
+* seccion `#contacto` de landing
+* imports de `enviarMensajeContacto`
+* `backend/src/contacto/contacto.controller.ts`
+* `backend/src/contacto/contacto.service.ts`
+* `backend/src/contacto/contacto.module.ts`
+* `backend/src/contacto/dto/crear-mensaje-contacto.dto.ts`
+* `MensajeContacto` en Prisma
 
 ---
 
