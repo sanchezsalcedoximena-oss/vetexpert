@@ -101,6 +101,39 @@ Frontend:
 * Skeleton loaders.
 * Toast notifications.
 
+## Gestion Mascotas implementada
+
+Backend:
+
+* `GET /api/mascotas`
+* `GET /api/mascotas/:id`
+* `POST /api/mascotas`
+* `PATCH /api/mascotas/:id`
+* `DELETE /api/mascotas/:id`
+* Paginacion.
+* Busqueda libre (en nombre mascota, raza, nombre/apellido/DNI del cliente).
+* Filtros por especie, estado y clienteId.
+* Soft delete (activo = false y eliminadoEn).
+* Validacion de existencia, rol CLIENTE y estado activo del dueño (clienteId).
+* Guards JWT.
+* Roles `ADMIN`, `SECRETARIA`, `VETERINARIO`.
+
+Frontend:
+
+* `/dashboard/mascotas`.
+* Tabla responsive en desktop y tarjetas en mobile.
+* Emojis identificadores por especie.
+* Buscador debounceado (250ms).
+* Filtros por estado y especie.
+* Paginacion funcional.
+* Modal de crear y editar.
+* Selector de dueño interactivo con busqueda y autocompletado en tiempo real (consumiendo `/api/clientes`).
+* Calculo visual dinamico de edad del animal.
+* Drawer lateral con detalle completo de la mascota e informacion del dueño.
+* Alertas Toast animadas.
+* Skeleton loaders.
+* Confirmacion de borrado.
+
 ## Prisma
 
 Schema ubicado en:
@@ -114,6 +147,7 @@ Migraciones aplicadas:
 * `20260524000000_fase_02_auth`
 * `20260524010000_fase_03_landing_contacto`
 * `20260524020000_fase_05_clientes`
+* `20260525001051_fase_06_mascotas`
 
 ## Endpoints activos
 
@@ -139,6 +173,14 @@ Clientes:
 * `PATCH /api/clientes/:id`
 * `DELETE /api/clientes/:id`
 
+Mascotas:
+
+* `GET /api/mascotas`
+* `GET /api/mascotas/:id`
+* `POST /api/mascotas`
+* `PATCH /api/mascotas/:id`
+* `DELETE /api/mascotas/:id`
+
 ## Estado roadmap
 
 Completado:
@@ -149,10 +191,11 @@ Completado:
 * Fase 04 - Acceso y Dashboard Base
 * Fase 04.1 - Seed Admin Inicial
 * Fase 05 - Gestion clientes
+* Fase 06 - Mascotas
 
 Proxima fase funcional:
 
-* Fase 06 - Mascotas
+* Fase 07 - Citas
 
 ## Estado UX/UI
 
