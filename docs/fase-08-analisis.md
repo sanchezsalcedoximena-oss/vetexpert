@@ -840,6 +840,7 @@ En el detalle de mascota:
 * Validar schema Prisma.
 * Crear migracion `fase_08_historia_clinica`.
 * Regenerar Prisma Client.
+* Migracion generada: `20260525151556_fase_08_historia_clinica`.
 
 ### Fase 08.2 - Backend modulo
 

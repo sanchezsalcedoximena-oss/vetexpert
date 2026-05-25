@@ -40,6 +40,7 @@ model Usuario {
   mascotas            Mascota[]
   citasComoVeterinario Cita[]              @relation("CitasComoVeterinario")
   citasComoCliente     Cita[]              @relation("CitasComoCliente")
+  historiasClinicas    HistoriaClinica[]
 
   @@map("usuarios")
 }
@@ -104,6 +105,7 @@ model Mascota {
   eliminadoEn     DateTime? @map("eliminado_en")
   cliente         Usuario   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   citas           Cita[]
+  historiasClinicas HistoriaClinica[]
 
   @@index([clienteId])
   @@map("mascotas")
@@ -132,6 +134,7 @@ model Cita {
   mascota     Mascota @relation(fields: [mascotaId], references: [id], onDelete: Restrict)
   veterinario Usuario @relation("CitasComoVeterinario", fields: [veterinarioId], references: [id], onDelete: Restrict)
   cliente     Usuario @relation("CitasComoCliente", fields: [clienteId], references: [id], onDelete: Restrict)
+  historiaClinica HistoriaClinica?
 
   @@index([mascotaId])
   @@index([veterinarioId])
@@ -139,3 +142,27 @@ model Cita {
   @@map("citas")
 }
 
+model HistoriaClinica {
+  id            String    @id @default(uuid()) @db.Uuid
+  fecha         DateTime  @default(now()) @map("fecha")
+  diagnostico   String    @map("diagnostico")
+  tratamiento   String    @map("tratamiento")
+  observaciones String?   @map("observaciones")
+  cerrada       Boolean   @default(false) @map("cerrada")
+  citaId        String    @unique @map("cita_id") @db.Uuid
+  mascotaId     String    @map("mascota_id") @db.Uuid
+  veterinarioId String    @map("veterinario_id") @db.Uuid
+  creadoEn      DateTime  @default(now()) @map("creado_en")
+  actualizadoEn DateTime  @updatedAt @map("actualizado_en")
+  eliminadoEn   DateTime? @map("eliminado_en")
+
+  cita        Cita    @relation(fields: [citaId], references: [id], onDelete: Restrict)
+  mascota     Mascota @relation(fields: [mascotaId], references: [id], onDelete: Restrict)
+  veterinario Usuario @relation(fields: [veterinarioId], references: [id], onDelete: Restrict)
+
+  @@index([mascotaId])
+  @@index([veterinarioId])
+  @@index([fecha])
+  @@index([cerrada])
+  @@map("historias_clinicas")
+}
