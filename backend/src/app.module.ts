@@ -5,6 +5,7 @@ import { CitasModule } from "./citas/citas.module";
 import { ClientesModule } from "./clientes/clientes.module";
 import { ConfiguracionModule } from "./configuracion/configuracion.module";
 import { ConsultasModule } from "./consultas/consultas.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
 import { HistoriasClinicasModule } from "./historias-clinicas/historias-clinicas.module";
 import { MantenimientoModule } from "./mantenimiento/mantenimiento.module";
 import { MascotasModule } from "./mascotas/mascotas.module";
@@ -26,6 +27,7 @@ import { VacunasModule } from "./vacunas/vacunas.module";
     ClientesModule,
     MascotasModule,
     CitasModule,
+    DashboardModule,
     HistoriasClinicasModule,
     StaffModule,
     ConsultasModule,

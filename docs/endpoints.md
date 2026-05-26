@@ -236,6 +236,75 @@ Reglas actuales:
 
 ---
 
+## Dashboard
+
+Resumen dinamico administrativo para el dashboard interno.
+
+Endpoints implementados:
+
+- `GET /api/dashboard/resumen`
+
+Roles permitidos:
+
+- `ADMIN`
+- `SECRETARIA`
+- `VETERINARIO`
+
+Reglas actuales:
+
+- Requiere JWT staff.
+- No expone informacion para clientes autenticables porque no existe auth cliente.
+- `ADMIN` recibe vision global.
+- `SECRETARIA` recibe foco operativo global.
+- `VETERINARIO` recibe solo sus citas e historias relacionadas.
+- `staffPorRol` solo se incluye para `ADMIN`.
+- No reemplaza CRUDs existentes.
+- No modifica `GET /api/usuarios/veterinarios`.
+
+Query params opcionales:
+
+- `fechaInicio`
+- `fechaFin`
+
+Respuesta:
+
+```json
+{
+  "rol": "ADMIN",
+  "periodo": {
+    "fechaInicio": "2026-05-01T05:00:00.000Z",
+    "fechaFin": "2026-06-01T04:59:59.999Z"
+  },
+  "metricas": {
+    "citasHoy": 4,
+    "citasPendientes": 8,
+    "citasConfirmadas": 6,
+    "citasCompletadas": 12,
+    "clientesActivos": 35,
+    "mascotasActivas": 51,
+    "historiasAbiertas": 5
+  },
+  "proximasCitas": [],
+  "citasPorEstado": [
+    { "estado": "PENDIENTE", "total": 8 },
+    { "estado": "CONFIRMADA", "total": 6 },
+    { "estado": "COMPLETADA", "total": 12 },
+    { "estado": "CANCELADA", "total": 1 }
+  ],
+  "mascotasPorEspecie": [
+    { "especie": "Canino", "total": 30 },
+    { "especie": "Felino", "total": 21 }
+  ],
+  "staffPorRol": [
+    { "rol": "ADMIN", "total": 1 },
+    { "rol": "SECRETARIA", "total": 2 },
+    { "rol": "VETERINARIO", "total": 4 }
+  ]
+}
+```
+
+---
+
 ## Contacto publico
 
 No hay endpoint backend activo para contacto publico en el contrato actual.

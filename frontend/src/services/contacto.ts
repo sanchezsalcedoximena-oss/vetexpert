@@ -6,7 +6,7 @@ export type MensajeContactoPayload = {
   mensaje: string;
 };
 
-const WHATSAPP_CONTACTO_URL = "https://api.whatsapp.com/send/?phone=51946223649&text=";
+const WHATSAPP_CONTACTO_URL = "https://api.whatsapp.com/send/?phone=51987551480&text=";
 
 export function construirUrlWhatsappContacto(payload: MensajeContactoPayload) {
   const texto = [
