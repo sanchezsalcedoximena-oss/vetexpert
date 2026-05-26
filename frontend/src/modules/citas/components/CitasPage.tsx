@@ -797,21 +797,19 @@ function CitaModal({
 
             <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-texto/60">Veterinario</label>
-              <input
-                list="veterinarios-citas"
+              <select
                 name="veterinarioId"
                 value={veterinarioId}
-                placeholder="Selecciona o escribe el UUID del veterinario"
                 className="mt-1 h-11 w-full rounded-md border border-borde bg-fondo px-3 text-sm outline-none transition focus:border-primario focus:ring-2 focus:ring-primario/18"
                 onChange={(event) => setVeterinarioId(event.target.value)}
-              />
-              <datalist id="veterinarios-citas">
+              >
+                <option value="">Selecciona un veterinario</option>
                 {veterinarios.map((veterinario) => (
                   <option key={veterinario.id} value={veterinario.id}>
                     {veterinario.nombre}
                   </option>
                 ))}
-              </datalist>
+              </select>
               {errores.veterinarioId ? <p className="mt-1 text-xs font-semibold text-red-600">{errores.veterinarioId}</p> : null}
             </div>
 
