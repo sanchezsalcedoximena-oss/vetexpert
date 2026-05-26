@@ -79,6 +79,8 @@ Implementado:
 - Modulo citas protegido.
 - Modulo historias clinicas protegido.
 - Endpoint `GET /api/usuarios/veterinarios` para selects internos.
+- Modulo staff implementado con CRUD backend protegido por `ADMIN`.
+- Hardening administrativo de staff implementado.
 
 Auth cliente fue retirado del contrato funcional.
 
@@ -98,6 +100,7 @@ Implementado:
 - Gestion de clientes en `/dashboard/clientes`.
 - Gestion de mascotas en `/dashboard/mascotas`.
 - Gestion de citas en `/dashboard/citas`.
+- Gestion de staff en `/dashboard/staff` solo para `ADMIN`.
 - Login staff en `/staff/login`.
 - `/login` renderiza acceso staff.
 - Contacto publico via WhatsApp.
@@ -125,6 +128,13 @@ Estado real:
 - La correccion ya funciona en frontend y no debe revertirse.
 
 Esta correccion es una precondicion importante para Fase 10: la futura gestion de staff no debe romper el contrato de veterinarios usado por citas.
+
+Estado tras Fase 10:
+
+- La gestion de staff conserva compatible `GET /api/usuarios/veterinarios`.
+- Los veterinarios inactivos no aparecen en el selector de citas porque el endpoint filtra `activo: true`.
+- Las citas historicas conservan el `veterinarioId` asociado.
+- Las historias clinicas historicas siguen resolviendo el veterinario por relacion persistente.
 
 ---
 
@@ -189,8 +199,57 @@ Implementado:
 - Vista responsive mobile/desktop.
 - Logout funcional.
 - Navegacion limitada a `ADMIN`, `SECRETARIA`, `VETERINARIO`.
+- Enlace `Staff` visible solo para `ADMIN`.
 
 No hay navegacion ni permisos para `CLIENTE`.
+
+---
+
+## Gestion staff
+
+Estado real:
+
+- Fase 10 implementada y cerrada.
+- `Usuario` sigue representando personal interno autenticable.
+- `Cliente` administrativo no participa en gestion staff.
+- No existe registro publico de staff.
+- No existe portal staff separado.
+
+Backend:
+
+- `GET /api/staff`
+- `GET /api/staff/:id`
+- `POST /api/staff`
+- `PATCH /api/staff/:id`
+- `PATCH /api/staff/:id/activar`
+- `PATCH /api/staff/:id/inactivar`
+- Protegido con `JwtAuthGuard`, `RolesGuard` y `@Roles(Rol.ADMIN)`.
+- Listado con paginacion, busqueda, filtro por rol y filtro por estado.
+- Crear staff con hash de contrasena mediante bcryptjs.
+- Validacion de correo, DNI y celular unicos.
+- Respuestas sin `passwordHash` ni refresh tokens.
+- Activacion e inactivacion sin soft delete.
+- No se puede inactivar el ultimo `ADMIN` activo.
+- No se puede degradar el ultimo `ADMIN` activo.
+- No se puede auto-inactivar el admin autenticado.
+- Al inactivar staff se revocan refresh tokens activos.
+- `JwtStrategy` valida que el staff del access token siga activo y no eliminado.
+
+Frontend:
+
+- `/dashboard/staff`.
+- Service `frontend/src/services/staff.ts`.
+- Tabla responsive en desktop y cards en mobile.
+- Filtros por busqueda, rol y estado.
+- Paginacion.
+- Modal de crear y editar.
+- Activar/inactivar.
+- Badges de rol y estado.
+- Skeleton loaders.
+- Empty state.
+- Toast notifications.
+- Errores backend visibles para duplicados, ultimo admin y auto-inactivacion.
+- Acceso visual restringido a `ADMIN`.
 
 ---
 
@@ -414,6 +473,15 @@ Usuarios:
 - `GET /api/usuarios/estado`
 - `GET /api/usuarios/veterinarios`
 
+Staff:
+
+- `GET /api/staff`
+- `GET /api/staff/:id`
+- `POST /api/staff`
+- `PATCH /api/staff/:id`
+- `PATCH /api/staff/:id/activar`
+- `PATCH /api/staff/:id/inactivar`
+
 Clientes:
 
 - `GET /api/clientes`
@@ -480,22 +548,26 @@ Completado:
 - Fase 09 - Reestructuracion auth/roles staff-only.
 - Sincronizacion documental de Fase 09.
 - Correccion del selector de veterinarios en citas.
+- Fase 10.1 - Backend CRUD staff.
+- Fase 10.2 - Hardening administrativo staff.
+- Fase 10.3 - Frontend gestion staff.
+- Fase 10.4 - Integracion con citas verificada.
+- Fase 10.5 - Verificacion y documentacion.
 
 Proxima fase funcional:
 
-- Fase 10 - Gestion de staff.
+- Fase 11 - Correcciones UX/UI y limpieza operativa.
 
 Estado Fase 10:
 
-- Solo esta analizada en `docs/fase-10-analisis.md`.
-- Todavia no esta implementada.
-- No se han creado migraciones de Fase 10.
+- Implementada y cerrada.
+- Documentacion final: `docs/fase-10-implementacion.md`.
+- No requirio migraciones Prisma.
 
 ---
 
 ## Fases futuras
 
-- Fase 10 - Gestion de staff.
 - Fase 11 - Correcciones UX/UI y limpieza operativa.
 - Fase 12 - Dashboard dinamico.
 - Fase 13 - Reportes.
@@ -510,14 +582,13 @@ Estado Fase 10:
 - Confirmar integridad de relaciones `clienteId` en mascotas y citas tras migrar.
 - Completar flujo operativo de recuperacion de contrasena staff.
 - Endurecer proxy si se requiere validacion de rol en middleware.
-- No romper `GET /api/usuarios/veterinarios` al implementar CRUD staff.
-- Definir si Fase 10 permite crear otros `ADMIN`.
-- Evitar inactivar o degradar el ultimo `ADMIN` activo.
-- Revocar refresh tokens al inactivar staff en Fase 10.
+- Evaluar reset password de staff en una fase futura.
+- Evaluar auditoria de cambios administrativos.
+- Evaluar permisos granulares por modulo.
 
 ---
 
-## Estado listo para iniciar Fase 10
+## Estado Fase 10 cerrada
 
 La documentacion operativa queda alineada con el estado real actual:
 
@@ -528,16 +599,17 @@ La documentacion operativa queda alineada con el estado real actual:
 - Citas usa veterinarios reales desde `GET /api/usuarios/veterinarios`.
 - Selector de veterinarios en frontend funciona con select controlado.
 - Fase 09 implementada y documentada.
-- Fase 10 analizada, pero no implementada.
+- Fase 10 implementada y documentada.
+- Typecheck backend pasa.
+- Typecheck frontend pasa.
 
-Riesgos a tener presentes al iniciar Fase 10:
+Compatibilidad preservada:
 
-- Proteger todo CRUD staff con `ADMIN`.
-- Mantener selector de veterinarios compatible con citas.
 - No mezclar `Cliente` administrativo con `Usuario` staff.
-- Evitar bloqueo del sistema por inactivar/degradar administradores.
-- Revocar sesiones activas al inactivar staff.
+- No romper citas.
+- No romper historias clinicas.
+- No romper `GET /api/usuarios/veterinarios`.
 
 Siguiente paso recomendado:
 
-- Iniciar implementacion real de Fase 10 tomando `docs/fase-10-analisis.md` como contrato inicial y preservando el endpoint `GET /api/usuarios/veterinarios` usado por citas.
+- Avanzar a Fase 11 con correcciones UX/UI y limpieza operativa, manteniendo intacta la integracion staff/citas.

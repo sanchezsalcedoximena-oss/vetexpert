@@ -70,7 +70,7 @@ Respuesta:
 ]
 ```
 
-La gestion completa de staff no esta implementada. Queda para Fase 10.
+La gestion completa de staff esta implementada en `/api/staff`. Este endpoint auxiliar se mantiene para selects internos y debe seguir compatible con citas.
 
 ---
 
@@ -259,11 +259,11 @@ El endpoint heredado `POST /api/contacto/mensajes` fue retirado del flujo final.
 
 ---
 
-## Staff - Fase 10 futura
+## Staff
 
-Gestion administrativa pendiente, no implementada todavia.
+Gestion administrativa de usuarios internos staff.
 
-Endpoints previstos para analisis:
+Endpoints implementados:
 
 - `GET /api/staff`
 - `GET /api/staff/:id`
@@ -272,9 +272,96 @@ Endpoints previstos para analisis:
 - `PATCH /api/staff/:id/activar`
 - `PATCH /api/staff/:id/inactivar`
 
-Reglas previstas:
+Roles permitidos:
+
+- `ADMIN`
+
+Reglas actuales:
 
 - Solo `ADMIN` puede crear, editar, activar o inactivar staff.
-- Roles gestionables: `VETERINARIO`, `SECRETARIA` y posiblemente `ADMIN`.
+- Roles gestionables: `ADMIN`, `VETERINARIO`, `SECRETARIA`.
 - No debe existir registro publico de staff.
-- Debe integrarse con login staff y control de acceso.
+- No devuelve `passwordHash`.
+- No devuelve refresh tokens.
+- Crear staff hashea la contrasena inicial con bcryptjs.
+- Valida correo unico.
+- Valida DNI unico si se envia.
+- Valida celular unico si se envia.
+- Listado con paginacion, busqueda, filtro por rol y filtro por estado.
+- Activar/inactivar no hace soft delete.
+- No se puede inactivar el ultimo `ADMIN` activo.
+- No se puede degradar el ultimo `ADMIN` activo.
+- No se puede auto-inactivar el admin autenticado.
+- Al inactivar staff se revocan refresh tokens activos.
+- Access tokens de staff inactivo son rechazados por `JwtStrategy`.
+- Login y refresh siguen reservados a staff activo.
+
+### GET /api/staff
+
+Query params:
+
+- `pagina` opcional.
+- `limite` opcional.
+- `busqueda` opcional.
+- `rol` opcional: `ADMIN`, `VETERINARIO`, `SECRETARIA`.
+- `estado` opcional: `activos`, `inactivos`, `todos`.
+
+Respuesta:
+
+```json
+{
+  "datos": [
+    {
+      "id": "uuid-staff",
+      "nombres": "Ana",
+      "apellidos": "Torres",
+      "correo": "ana.torres@vetexpert.com",
+      "dni": "12345678",
+      "celular": "987654321",
+      "direccion": "Av. Principal 123",
+      "rol": "VETERINARIO",
+      "activo": true,
+      "ultimoAccesoEn": null,
+      "creadoEn": "2026-05-26T00:00:00.000Z",
+      "actualizadoEn": "2026-05-26T00:00:00.000Z",
+      "eliminadoEn": null
+    }
+  ],
+  "meta": {
+    "pagina": 1,
+    "limite": 10,
+    "total": 1,
+    "totalPaginas": 1
+  }
+}
+```
+
+### POST /api/staff
+
+Request body:
+
+```json
+{
+  "nombres": "Ana",
+  "apellidos": "Torres",
+  "correo": "ana.torres@vetexpert.com",
+  "dni": "12345678",
+  "celular": "987654321",
+  "direccion": "Av. Principal 123",
+  "rol": "VETERINARIO",
+  "contrasena": "Temporal123*",
+  "activo": true
+}
+```
+
+### PATCH /api/staff/:id
+
+Actualiza datos administrativos y rol. No actualiza password ni estado activo.
+
+### PATCH /api/staff/:id/activar
+
+Activa un usuario staff.
+
+### PATCH /api/staff/:id/inactivar
+
+Inactiva un usuario staff y revoca sus refresh tokens activos. Aplica reglas anti-bloqueo de administradores.
