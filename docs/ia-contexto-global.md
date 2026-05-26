@@ -4,176 +4,211 @@
 
 VetExpert es un sistema web veterinario profesional administrativo/staff-only.
 
-NO existe portal cliente.
+No existe portal cliente, login cliente ni registro publico cliente.
 
-NO existe login cliente.
-
-NO existe registro público cliente.
-
-Los clientes son únicamente registros administrativos internos relacionados con mascotas, citas e historias clínicas.
+Los clientes son registros administrativos internos relacionados con mascotas, citas e historias clinicas. No son usuarios autenticables.
 
 ---
 
-# Stack
+## Stack
 
 Frontend:
-- Next.js App Router
-- TypeScript estricto
-- TailwindCSS
-- shadcn/ui
-- Framer Motion
+
+- Next.js App Router.
+- TypeScript estricto.
+- TailwindCSS.
+- shadcn/ui.
+- Framer Motion.
 
 Backend:
-- NestJS
-- Prisma ORM
-- PostgreSQL
-- JWT
+
+- NestJS.
+- Prisma ORM.
+- PostgreSQL.
+- JWT.
 
 Infraestructura futura:
-- GitHub
-- Supabase PostgreSQL
-- Vercel
-- Railway o Render
+
+- GitHub.
+- Supabase PostgreSQL.
+- Vercel.
+- Railway o Render.
 
 ---
 
-# Arquitectura
+## Arquitectura
 
-- Clean Architecture
-- Monolito modular
-- Backend/frontend separados
-- Componentes reutilizables
-- Dark mode
-- Responsive
-- Diseño premium
-- Mobile first
+- Clean Architecture.
+- Monolito modular.
+- Backend/frontend separados.
+- Componentes reutilizables.
+- Dark mode.
+- Responsive.
+- Diseno premium.
+- Mobile first.
 
-NO usar microservicios.
-
----
-
-# Roles finales
-
-- ADMIN
-- VETERINARIO
-- SECRETARIA
-
-Rol eliminado:
-- CLIENTE
+No usar microservicios.
 
 ---
 
-# Estado actual roadmap
+## Roles finales
+
+- `ADMIN`.
+- `VETERINARIO`.
+- `SECRETARIA`.
+
+No existe `Rol.CLIENTE`.
+
+No existe `TipoUsuario`.
+
+---
+
+## Modelo de identidad final
+
+`Usuario`:
+
+- Personal interno autenticable.
+- Tiene correo, password hash, rol, refresh tokens y recuperaciones de clave staff.
+- Puede actuar como veterinario responsable en citas e historias clinicas.
+
+`Cliente`:
+
+- Entidad administrativa independiente.
+- No tiene password.
+- No tiene JWT.
+- No tiene refresh token.
+- No inicia sesion.
+- Es dueno de mascotas y se relaciona con citas e historias clinicas.
+
+---
+
+## Estado actual roadmap
 
 Completado:
 
-- Fase 01
-- Fase 02 Auth base
-- Fase 03 Landing
-- Fase 04 Dashboard base
-- Fase 04.1 Seed admin
-- Fase 05 Clientes
-- Fase 06 Mascotas
-- Fase 07 Citas
-- Fase 08 Historia clínica completa
+- Fase 01.
+- Fase 02 Auth base.
+- Fase 03 Landing.
+- Fase 04 Dashboard base.
+- Fase 04.1 Seed admin.
+- Fase 05 Clientes.
+- Fase 06 Mascotas.
+- Fase 07 Citas.
+- Fase 08 Historia clinica completa.
+- Fase 09 Reestructuracion staff-only.
 
-Historia clínica incluye:
-- Prisma
-- Backend
-- DTOs
-- Endpoints
-- Timeline UI
-- Integración con citas completadas
+Fase 09 dejo implementado:
 
----
-
-# Próxima fase
-
-## Fase 09
-
-Reestructuración auth/roles staff-only.
-
-Objetivos:
-- eliminar auth cliente
-- eliminar portal cliente
-- eliminar registro cliente
-- eliminar recuperación cliente
-- retirar CLIENTE del flujo auth
-- mantener clientes como entidad administrativa
-- preparar gestión de staff
+- Eliminacion de auth cliente.
+- Eliminacion de `TipoUsuario`.
+- Eliminacion de `Rol.CLIENTE`.
+- Modelo Prisma `Cliente`.
+- `Usuario` reservado para staff.
+- Contacto publico via WhatsApp.
+- Endpoint `GET /api/usuarios/veterinarios`.
+- Selector de veterinarios en citas corregido con ids reales y select controlado.
 
 ---
 
-# Fases futuras
+## Fase actual documentada
 
-## Fase 10
-Gestión de staff:
-- veterinarios
-- secretarias
-- activación/inactivación
-- permisos admin
+Fase 09:
 
-## Fase 11
-Correcciones UX/UI:
-- validaciones login
-- icono ojo contraseña
-- selector veterinarios citas
-- limpieza auth
-
-## Fase 12
-Dashboard dinámico.
-
-## Fase 13
-Reportes.
-
-## Fase 14
-Configuración.
-
-## Fase 15
-Mantenimiento futuro.
+- Contrato tecnico: `docs/fase-09-analisis.md`.
+- Resultado implementado: `docs/fase-09-implementacion.md`.
 
 ---
 
-# Reglas IA
+## Proxima fase
 
-- NO ejecutar npm audit automáticamente
-- NO actualizar dependencias innecesariamente
-- NO modificar fases futuras
-- Mantener TypeScript estricto
-- Mantener arquitectura actual
-- Mantener diseño premium
-- Mantener dark mode
-- Mantener responsive
-- Mantener patrones existentes
+Fase 10 queda solo analizada, no implementada.
 
----
+Objetivo futuro:
 
-# Flujo actual importante
+- Gestion de staff.
+- CRUD de veterinarios, secretarias y administradores segun decision.
+- Activacion/inactivacion.
+- Permisos restringidos a `ADMIN`.
 
-Una mascota puede tener múltiples citas.
+Documento de analisis:
 
-Cada cita COMPLETADA puede generar máximo una HistoriaClinica.
-
-La historia clínica:
-- deriva mascotaId desde cita
-- deriva veterinarioId desde cita
-- puede cerrarse
-- solo ADMIN puede reabrirla
+- `docs/fase-10-analisis.md`.
 
 ---
 
-# UX/UI importante
+## Fases futuras
 
-En citas:
-- selector veterinario debe funcionar como combobox searchable igual que clientes
+Fase 10:
+
+- Gestion de staff.
+
+Fase 11:
+
+- Correcciones UX/UI generales.
+
+Fase 12:
+
+- Dashboard dinamico.
+
+Fase 13:
+
+- Reportes.
+
+Fase 14:
+
+- Configuracion.
+
+Fase 15:
+
+- Mantenimiento futuro.
+
+---
+
+## Reglas IA
+
+- No ejecutar `npm audit` automaticamente.
+- No actualizar dependencias innecesariamente.
+- No modificar fases futuras sin solicitud explicita.
+- Mantener TypeScript estricto.
+- Mantener arquitectura actual.
+- Mantener diseno premium.
+- Mantener dark mode.
+- Mantener responsive.
+- Mantener patrones existentes.
+- No inventar funcionalidades no implementadas.
+
+---
+
+## Flujos actuales importantes
+
+- Una mascota pertenece a un cliente administrativo.
+- Una mascota puede tener multiples citas.
+- Una cita deriva `clienteId` desde la mascota.
+- Una cita tiene un veterinario staff asociado.
+- Cada cita `COMPLETADA` puede generar maximo una historia clinica.
+- La historia clinica deriva `mascotaId` y `veterinarioId` desde la cita.
+- La historia clinica puede cerrarse.
+- Solo `ADMIN` puede reabrir historias clinicas.
+
+---
+
+## UX/UI importante
+
+Citas:
+
+- Selector de veterinario usa ids reales desde `GET /api/usuarios/veterinarios`.
+- No revertir el selector controlado de veterinarios en citas.
 
 Login:
-- mejorar validaciones visuales
-- corregir icono ojo contraseña
+
+- Es staff-only.
+- Usa `/staff/login` como ruta principal.
 
 Clientes:
-- ya NO usan contraseña
-- ya NO tendrán acceso al sistema
+
+- No usan contrasena.
+- No tienen acceso al sistema.
 
 Staff:
-- solo ADMIN crea veterinarios y secretarias
+
+- La gestion administrativa completa queda para Fase 10.

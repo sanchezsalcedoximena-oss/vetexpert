@@ -1,140 +1,183 @@
-# VetExpert — Contexto General del Proyecto
+# VetExpert - Contexto General del Proyecto
 
 ## Arquitectura
-- Clean Architecture
-- Monolito modular
-- TypeScript estricto
-- Componentes reutilizables
-- Código mantenible
-- Arquitectura escalable
 
-NO usar microservicios.
+- Clean Architecture.
+- Monolito modular.
+- Backend y frontend separados.
+- TypeScript estricto.
+- Componentes reutilizables.
+- Codigo mantenible y escalable.
 
----
-
-## Roles del Sistema
-- Administrador
-- Veterinario
-- Secretaria
-
-Rol eliminado del acceso al sistema:
-- Cliente
-
-Los clientes existen solo como registros administrativos internos: dueños de mascotas, datos de contacto, historial de atención y trazabilidad operativa. No tienen login, portal, JWT ni cuenta de usuario.
+No usar microservicios.
 
 ---
 
-## Validaciones Perú
-- DNI: 8 dígitos
-- Celular: 9 dígitos iniciando en 9
-- Correos válidos
+## Stack
+
+Frontend:
+
+- Next.js App Router.
+- TypeScript estricto.
+- TailwindCSS.
+- shadcn/ui.
+
+Backend:
+
+- NestJS.
+- Prisma ORM.
+- PostgreSQL.
+- JWT.
+
+---
+
+## Alcance confirmado
+
+VetExpert es un sistema web veterinario administrativo, exclusivamente staff-only.
+
+No existe:
+
+- Portal cliente.
+- Login cliente.
+- Registro publico cliente.
+- Recuperacion cliente.
+- Autenticacion cliente.
+- Sesiones cliente.
+- JWT cliente.
+- `TipoUsuario`.
+- `Rol.CLIENTE`.
+
+Los clientes existen solo como registros administrativos internos. Representan duenos de mascotas, datos de contacto y relaciones operativas con mascotas, citas e historias clinicas.
+
+---
+
+## Roles activos
+
+- `ADMIN`.
+- `VETERINARIO`.
+- `SECRETARIA`.
+
+`Usuario` representa unicamente personal interno autenticable.
+
+`Cliente` representa una entidad administrativa independiente, no autenticable.
+
+---
+
+## Estado actual
+
+Fase 09 implementada como reestructuracion staff-only.
+
+Estado real:
+
+- Auth cliente eliminado del backend y frontend.
+- JWT y refresh token reservados para staff.
+- `Usuario` quedo como staff autenticable.
+- Existe modelo Prisma `Cliente` independiente.
+- Mascotas y citas apuntan a `Cliente`.
+- Historias clinicas resuelven dueno desde cita/cliente.
+- Contacto publico abre WhatsApp y no persiste mensajes con Prisma.
+- Selector de veterinarios en citas usa `GET /api/usuarios/veterinarios`.
+- El selector de veterinarios en citas usa ids reales del backend mediante select controlado y no debe revertirse.
+- Migracion existente: `database/schema/migrations/20260526000000_fase_09_staff_only`.
+
+---
+
+## Validaciones Peru
+
+- DNI: 8 digitos.
+- Celular: 9 digitos iniciando en 9.
+- Correos validos.
 
 ---
 
 ## UX/UI
-- Responsive
-- Mobile first
-- Dark mode
-- Skeleton loaders
-- Toast notifications
-- Loader global con perrito corriendo
-- Sidebar moderna
-- Diseño premium
+
+- Responsive.
+- Mobile first.
+- Dark mode.
+- Skeleton loaders.
+- Toast notifications.
+- Loader global con perrito corriendo.
+- Sidebar moderna.
+- Diseno premium.
 
 ---
 
-## Loader Global
+## Loader global
+
 Mostrar:
-- Perrito corriendo animado
-- Texto: “Cargando sistema...”
+
+- Perrito corriendo animado.
+- Texto: `Cargando sistema...`.
 
 Usar:
-- Framer Motion
-- LottieFiles o GIF optimizado
+
+- Framer Motion.
+- LottieFiles o GIF optimizado.
 
 ---
 
-## Reglas Globales
-- Todo en español.
-- NO subir archivos .env.
+## Reglas globales
+
+- Todo en espanol.
+- No subir archivos `.env`.
 - Usar Git y GitHub.
 - Desarrollar primero en localhost.
-- Desplegar después.
+- Desplegar despues.
+- No ejecutar `npm audit` automaticamente.
+- No optimizar dependencias fuera del alcance solicitado.
+- No actualizar versiones innecesariamente.
+- No modificar fases futuras sin solicitud explicita.
+- Mantener foco en la fase actual.
 
 ---
 
-## Despliegue Futuro
-Frontend:
-- Vercel
-
-Backend:
-- Railway o Render
-
-Base de datos:
-- Supabase PostgreSQL
-
-## Reglas para IA
-
-- NO ejecutar npm audit automáticamente.
-- NO optimizar dependencias fuera del alcance solicitado.
-- NO actualizar versiones innecesariamente.
-- NO modificar fases futuras.
-- Mantener foco únicamente en la fase actual.
-
-## Acceso al Sistema
+## Acceso al sistema
 
 ### Staff administrativo
-- Login único para staff.
+
+- Login unico para staff.
 - Dashboard administrativo.
 - Acceso por roles `ADMIN`, `VETERINARIO`, `SECRETARIA`.
 - Sin flujo multiportal.
 
 ### Clientes administrativos
+
 - No tienen portal.
-- No tienen registro público.
-- No tienen autenticación.
-- No tienen recuperación de contraseña.
-- Se gestionan únicamente desde el panel interno por el staff autorizado.
+- No tienen registro publico.
+- No tienen autenticacion.
+- No tienen password.
+- No tienen recuperacion de contrasena.
+- Se gestionan solo desde el panel interno por staff autorizado.
 
-## Cambio de Alcance Confirmado
+---
 
-VetExpert queda definido como un sistema exclusivamente administrativo/staff.
+## Despliegue futuro
 
-Se elimina del alcance:
-- Portal cliente.
-- Login cliente.
-- Registro público de cliente.
-- Autenticación cliente.
-- Recuperación cliente.
-- Acceso cliente.
-- Flujo multiportal.
+Frontend:
 
-Se conserva:
-- Gestión administrativa de clientes como dueños de mascotas.
-- Gestión de mascotas.
-- Gestión de citas.
-- Historia clínica.
-- Dashboard interno.
-- Reportes internos futuros.
-- Configuración y mantenimiento administrativo.
+- Vercel.
 
-## Gestión de Staff Futuro
+Backend:
 
-Debe incorporarse una gestión administrativa de usuarios staff:
+- Railway o Render.
+
+Base de datos:
+
+- Supabase PostgreSQL.
+
+---
+
+## Gestion de staff futura
+
+La Fase 10 debe analizar e implementar posteriormente gestion administrativa de staff:
+
 - Veterinarios.
 - Secretarias.
-- Administradores según necesidad.
-- Activación/inactivación.
+- Administradores, segun decision de producto.
+- Activacion/inactivacion.
 - Control de acceso.
-- Creación y administración solo por `ADMIN`.
-- Auditoría básica de acceso y estado.
+- Creacion y administracion solo por `ADMIN`.
+- Auditoria basica de acceso y estado.
 
-## Reestructuración Pendiente
-
-Antes de avanzar nuevas fases funcionales se debe ejecutar una fase de reestructuración:
-- Eliminar endpoints y pantallas de cliente autenticado.
-- Retirar rutas públicas `/portal/*`, `/registro`, `/login` cliente y recuperación cliente si queda orientada a cliente.
-- Refactorizar clientes para dejar de depender de `rol: CLIENTE` como usuario autenticable.
-- Mantener compatibilidad de relaciones actuales hasta definir migración de datos segura.
-- Ajustar navegación y guards a roles finales staff.
-- Limpiar services frontend y auth store de tipos cliente.
+Fase 10 no esta implementada todavia.
