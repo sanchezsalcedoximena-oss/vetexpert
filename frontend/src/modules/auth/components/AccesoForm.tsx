@@ -14,7 +14,7 @@ import { correoSchema } from "@/validators/peru";
 
 const loginSchema = z.object({
   correo: correoSchema,
-  contrasena: z.string().min(8, "La contrasena debe tener al menos 8 caracteres.")
+  contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres.")
 });
 
 type LoginErrores = Partial<Record<keyof z.infer<typeof loginSchema> | "general", string>>;
@@ -45,7 +45,7 @@ export function AccesoForm() {
       establecerSesion(sesion);
       router.push("/dashboard");
     } catch {
-      setErrores({ general: "No pudimos iniciar sesion con esas credenciales." });
+      setErrores({ general: "No pudimos iniciar sesión con esas credenciales." });
     } finally {
       setCargando(false);
     }
@@ -66,7 +66,7 @@ export function AccesoForm() {
           placeholder="staff@vetexpert.pe"
           type="email"
         />
-        <PasswordInput error={errores.contrasena} label="Contrasena" name="contrasena" placeholder="Tu contrasena" />
+        <PasswordInput error={errores.contrasena} label="Contraseña" name="contrasena" placeholder="Tu contraseña" />
         {errores.general ? <p className="text-sm font-medium text-red-600">{errores.general}</p> : null}
         <Button className="w-full" loading={cargando} type="submit">
           Ingresar

@@ -18,25 +18,25 @@ import { WhatsAppButton } from "./WhatsAppButton";
 const servicios = [
   {
     titulo: "Consulta veterinaria",
-    descripcion: "Evaluaciones clinicas completas con seguimiento claro para cada mascota.",
+    descripcion: "Evaluaciones clínicas completas con seguimiento claro para cada mascota.",
     icono: Stethoscope
   },
   {
-    titulo: "Vacunacion",
+    titulo: "Vacunación",
     descripcion: "Calendarios preventivos, recordatorios y control seguro por etapa de vida.",
     icono: Syringe
   },
   {
     titulo: "Urgencias",
-    descripcion: "Atencion prioritaria para sintomas agudos, dolor, heridas o cambios bruscos.",
+    descripcion: "Atención prioritaria para síntomas agudos, dolor, heridas o cambios bruscos.",
     icono: HeartPulse
   }
 ];
 
 const promociones = [
-  "Chequeo preventivo con orientacion nutricional",
+  "Chequeo preventivo con orientación nutricional",
   "Plan cachorro con primera vacuna y control",
-  "Bano medicado con evaluacion dermatologica"
+  "Baño medicado con evaluación dermatológica"
 ];
 
 export function LandingPage() {
@@ -104,18 +104,18 @@ function HeroSection() {
         >
           <p className="mb-4 inline-flex items-center gap-2 rounded-md bg-white/12 px-3 py-2 text-sm font-semibold backdrop-blur">
             <ShieldCheck className="h-4 w-4" />
-            Veterinaria moderna en Lima
+            Veterinaria moderna en Junín - Perú
           </p>
           <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
             Cuidado veterinario profesional, cercano y digital.
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-white/78 sm:text-lg">
-            Consultas, vacunas, controles preventivos y acompanamiento clinico con una experiencia pensada para
+            Consultas, vacunas, controles preventivos y acompanamiento clínico con una experiencia pensada para
             mascotas y familias exigentes.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a className="rounded-md bg-primario px-5 py-3 text-center text-sm font-bold text-white" href="#contacto">
-              Reservar orientacion
+              Reservar orientación
             </a>
             <a
               className="rounded-md border border-white/35 px-5 py-3 text-center text-sm font-bold text-white"
@@ -136,8 +136,8 @@ function ServiciosSection() {
       <div className="mx-auto max-w-7xl">
         <SectionTitle
           etiqueta="Servicios"
-          titulo="Atencion clara para cada etapa"
-          descripcion="Procesos ordenados, comunicacion simple y cuidado clinico enfocado en prevenir antes de corregir."
+          titulo="Atención clara para cada etapa"
+          descripcion="Procesos ordenados, comunicación simple y cuidado clínico enfocado en prevenir antes de corregir."
         />
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {servicios.map((servicio) => {
@@ -172,7 +172,7 @@ function PromocionesSection() {
         <SectionTitle
           etiqueta="Promociones"
           titulo="Planes de bienvenida"
-          descripcion="Opciones pensadas para iniciar el cuidado preventivo sin perder calidad clinica."
+          descripcion="Opciones pensadas para iniciar el cuidado preventivo sin perder calidad clínica."
         />
         <div className="grid gap-3">
           {promociones.map((promocion) => (
@@ -201,12 +201,12 @@ function SobreNosotrosSection() {
         <div>
           <SectionTitle
             etiqueta="Sobre nosotros"
-            titulo="Un equipo que combina criterio clinico y calidez"
-            descripcion="Trabajamos con protocolos claros, historias ordenadas y comunicacion humana para que cada familia entienda que necesita su mascota y por que."
+            titulo="Un equipo que combina criterio clínico y calidez"
+            descripcion="Trabajamos con protocolos claros, historias ordenadas y comunicación humana para que cada familia entienda que necesita su mascota y por qué."
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <Metric valor="12+" etiqueta="anos de experiencia" />
-            <Metric valor="4.9" etiqueta="satisfaccion promedio" />
+            <Metric valor="12+" etiqueta="años de experiencia" />
+            <Metric valor="4.9" etiqueta="satisfacción promedio" />
             <Metric valor="24h" etiqueta="respuesta prioritaria" />
           </div>
         </div>
@@ -228,11 +228,11 @@ function ContactoSection() {
           <div className="mt-8 space-y-4 text-sm text-texto/72">
             <p className="flex items-center gap-3">
               <Phone className="h-5 w-5 text-primario" />
-              +51 987 654 321
+              +51 987 551 480
             </p>
             <p className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-primario" />
-              Av. Los Veterinarios 245, Lima
+              Ca. Alhelíes 100, Huancayo
             </p>
             <p className="flex items-center gap-3">
               <CalendarCheck className="h-5 w-5 text-primario" />
@@ -251,7 +251,7 @@ function Footer() {
     <footer className="bg-slate-950 px-4 py-8 text-white sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm text-white/70 md:flex-row md:items-center md:justify-between">
         <p className="font-bold text-white">VetExpert</p>
-        <p>Atencion veterinaria profesional para familias responsables.</p>
+        <p>Atención veterinaria profesional para familias responsables.</p>
         <p>2026 VetExpert</p>
       </div>
     </footer>

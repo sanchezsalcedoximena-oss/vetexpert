@@ -73,7 +73,7 @@ export function ContactForm() {
           )}
           id="mensaje"
           name="mensaje"
-          placeholder="Cuentanos que necesita tu mascota"
+          placeholder="Cuentanos qué necesita tu mascota"
         />
         {errores.mensaje ? <span className="mt-1.5 block text-xs font-medium text-red-600">{errores.mensaje}</span> : null}
       </label>

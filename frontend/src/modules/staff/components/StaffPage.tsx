@@ -33,11 +33,11 @@ const staffBaseSchema = z.object({
   dni: z.union([dniSchema, z.literal("")]).optional(),
   celular: z.union([celularPeruSchema, z.literal("")]).optional(),
   direccion: z.string().max(160, "Maximo 160 caracteres.").optional(),
-  rol: z.enum(rolesStaff, { errorMap: () => ({ message: "Selecciona un rol valido." }) })
+  rol: z.enum(rolesStaff, { errorMap: () => ({ message: "Selecciona un rol válido." }) })
 });
 
 const crearStaffSchema = staffBaseSchema.extend({
-  contrasena: z.string().min(8, "La contrasena debe tener al menos 8 caracteres.").max(72, "Maximo 72 caracteres."),
+  contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres.").max(72, "Maximo 72 caracteres."),
   activo: z.boolean()
 });
 
@@ -210,7 +210,7 @@ export function StaffPage() {
 
       <div className="flex flex-col gap-3 rounded-md border border-borde bg-superficie p-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-texto/60">
-          {meta.total} usuarios staff - pagina {meta.pagina} de {meta.totalPaginas}
+          {meta.total} usuarios staff - página {meta.pagina} de {meta.totalPaginas}
         </p>
         <div className="flex gap-2">
           <Button disabled={pagina <= 1 || cargando} type="button" variant="ghost" onClick={() => setPagina((valor) => Math.max(1, valor - 1))}>
@@ -455,7 +455,7 @@ function StaffModal({
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold">{modo === "crear" ? "Nuevo staff" : "Editar staff"}</h2>
-            <p className="text-sm text-texto/60">Gestion administrativa de usuarios internos.</p>
+            <p className="text-sm text-texto/60">Gestión administrativa de usuarios internos.</p>
           </div>
           <Button aria-label="Cerrar" size="icon" type="button" variant="ghost" onClick={cerrar}>
             <X className="h-5 w-5" />
