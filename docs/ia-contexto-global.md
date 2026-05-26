@@ -96,6 +96,8 @@ Completado:
 - Fase 07 Citas.
 - Fase 08 Historia clinica completa.
 - Fase 09 Reestructuracion staff-only.
+- Fase 10 Gestion administrativa de staff.
+- Fase 11 UX/UI y limpieza operativa.
 
 Fase 09 dejo implementado:
 
@@ -110,41 +112,39 @@ Fase 09 dejo implementado:
 
 ---
 
-## Fase actual documentada
+## Fases actuales documentadas
 
 Fase 09:
 
 - Contrato tecnico: `docs/fase-09-analisis.md`.
 - Resultado implementado: `docs/fase-09-implementacion.md`.
 
+Fase 10:
+
+- Analisis: `docs/fase-10-analisis.md`.
+- Resultado implementado: `docs/fase-10-implementacion.md`.
+
+Fase 11:
+
+- Analisis: `docs/fase-11-analisis.md`.
+- Resultado implementado: `docs/fase-11-implementacion.md`.
+
 ---
 
 ## Proxima fase
 
-Fase 10 queda solo analizada, no implementada.
+Fase 12 - Dashboard dinamico.
 
 Objetivo futuro:
 
-- Gestion de staff.
-- CRUD de veterinarios, secretarias y administradores segun decision.
-- Activacion/inactivacion.
-- Permisos restringidos a `ADMIN`.
-
-Documento de analisis:
-
-- `docs/fase-10-analisis.md`.
+- Mostrar metricas operativas reales.
+- Reutilizar endpoints existentes o definir endpoints agregados acotados.
+- Mantener intactos CRUD, citas, historias clinicas y staff.
+- Preservar arquitectura staff-only.
 
 ---
 
 ## Fases futuras
-
-Fase 10:
-
-- Gestion de staff.
-
-Fase 11:
-
-- Correcciones UX/UI generales.
 
 Fase 12:
 
@@ -211,4 +211,10 @@ Clientes:
 
 Staff:
 
-- La gestion administrativa completa queda para Fase 10.
+- La gestion administrativa completa fue implementada en Fase 10.
+- Solo `ADMIN` puede crear, editar, activar o inactivar staff.
+- No romper hardening de ultimo `ADMIN` activo.
+
+UX/UI:
+
+- Fase 11 implemento `TableSkeleton`, `EmptyState`, loading buttons, mejoras de accesibilidad en `Input`, wrapping de textos largos, toasts mobile, overflow horizontal controlado, textarea resize vertical, responsive y dark mode refinados.

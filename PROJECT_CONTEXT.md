@@ -65,7 +65,7 @@ Los clientes existen solo como registros administrativos internos. Representan d
 
 ## Estado actual
 
-Fase 09 implementada como reestructuracion staff-only.
+Fase 11 implementada y cerrada.
 
 Estado real:
 
@@ -79,6 +79,8 @@ Estado real:
 - Selector de veterinarios en citas usa `GET /api/usuarios/veterinarios`.
 - El selector de veterinarios en citas usa ids reales del backend mediante select controlado y no debe revertirse.
 - Migracion existente: `database/schema/migrations/20260526000000_fase_09_staff_only`.
+- Fase 10 implemento gestion administrativa de staff.
+- Fase 11 consolido mejoras UX/UI, responsive, dark mode, loading states, empty states, validaciones frontend y accesibilidad basica.
 
 ---
 
@@ -168,16 +170,30 @@ Base de datos:
 
 ---
 
-## Gestion de staff futura
+## Estado Fase 10 y Fase 11
 
-La Fase 10 debe analizar e implementar posteriormente gestion administrativa de staff:
+Fase 10 esta implementada y cerrada:
 
-- Veterinarios.
-- Secretarias.
-- Administradores, segun decision de producto.
-- Activacion/inactivacion.
-- Control de acceso.
-- Creacion y administracion solo por `ADMIN`.
-- Auditoria basica de acceso y estado.
+- CRUD administrativo de staff en `/dashboard/staff`.
+- Endpoints `/api/staff`.
+- Creacion, edicion, activacion e inactivacion solo por `ADMIN`.
+- Hardening de ultimo `ADMIN` activo.
+- Revocacion de refresh tokens al inactivar staff.
+- Compatibilidad preservada con `GET /api/usuarios/veterinarios`.
 
-Fase 10 no esta implementada todavia.
+Fase 11 esta implementada y cerrada:
+
+- `TableSkeleton`.
+- `EmptyState`.
+- Loading buttons.
+- Mejoras de accesibilidad en `Input`.
+- Wrapping de textos largos.
+- Toasts mobile refinados.
+- Overflow horizontal controlado.
+- Textareas con resize vertical.
+- Responsive y dark mode refinados.
+- Validaciones frontend mejoradas.
+
+Siguiente fase real:
+
+- Fase 12 - Dashboard dinamico.

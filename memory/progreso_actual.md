@@ -127,7 +127,7 @@ Estado real:
 - El formulario usa select controlado para mantener sincronizado el `veterinarioId`.
 - La correccion ya funciona en frontend y no debe revertirse.
 
-Esta correccion es una precondicion importante para Fase 10: la futura gestion de staff no debe romper el contrato de veterinarios usado por citas.
+Esta correccion fue una precondicion importante para Fase 10: la gestion de staff no debe romper el contrato de veterinarios usado por citas.
 
 Estado tras Fase 10:
 
@@ -553,10 +553,15 @@ Completado:
 - Fase 10.3 - Frontend gestion staff.
 - Fase 10.4 - Integracion con citas verificada.
 - Fase 10.5 - Verificacion y documentacion.
+- Fase 11.1 - Auditoria UX/UI operativa.
+- Fase 11.2 - Normalizacion de estados visuales.
+- Fase 11.3 - Formularios, modales y drawers.
+- Fase 11.4 - Responsive y dark mode.
+- Fase 11.5 - Limpieza operativa y cierre documental.
 
 Proxima fase funcional:
 
-- Fase 11 - Correcciones UX/UI y limpieza operativa.
+- Fase 12 - Dashboard dinamico.
 
 Estado Fase 10:
 
@@ -564,11 +569,20 @@ Estado Fase 10:
 - Documentacion final: `docs/fase-10-implementacion.md`.
 - No requirio migraciones Prisma.
 
+Estado Fase 11:
+
+- Implementada y cerrada.
+- Documentacion final: `docs/fase-11-implementacion.md`.
+- No requirio cambios backend.
+- No requirio cambios Prisma.
+- No requirio migraciones.
+- Consolido mejoras UX/UI, responsive, dark mode, loading states, empty states, validaciones frontend y accesibilidad basica.
+- Typecheck frontend pasa.
+
 ---
 
 ## Fases futuras
 
-- Fase 11 - Correcciones UX/UI y limpieza operativa.
 - Fase 12 - Dashboard dinamico.
 - Fase 13 - Reportes.
 - Fase 14 - Configuracion.
@@ -612,4 +626,41 @@ Compatibilidad preservada:
 
 Siguiente paso recomendado:
 
-- Avanzar a Fase 11 con correcciones UX/UI y limpieza operativa, manteniendo intacta la integracion staff/citas.
+- Avanzar a Fase 12 con dashboard dinamico, manteniendo intacta la integracion staff/citas.
+
+---
+
+## Estado Fase 11 cerrada
+
+Fase 11 queda oficialmente cerrada como fase de UX/UI y limpieza operativa frontend.
+
+Implementado:
+
+- `TableSkeleton`.
+- `EmptyState`.
+- Loading buttons.
+- Mejoras de accesibilidad en `Input`.
+- Wrapping de textos largos.
+- Mejoras de toast mobile.
+- Overflow horizontal controlado.
+- Textarea resize vertical.
+- Refinamiento de estados vacios.
+- Mejoras responsive.
+- Mejoras dark mode.
+- Validaciones frontend reforzadas.
+
+Compatibilidad preservada:
+
+- Arquitectura staff-only.
+- `Usuario` reservado para staff autenticable.
+- `Cliente` administrativo no autenticable.
+- `GET /api/usuarios/veterinarios`.
+- Selector controlado de veterinarios en citas.
+- Citas.
+- Historias clinicas.
+- Staff CRUD.
+- Hardening de ultimo `ADMIN`.
+
+Siguiente fase real:
+
+- Fase 12 - Dashboard dinamico.
