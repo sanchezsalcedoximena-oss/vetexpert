@@ -13,6 +13,7 @@ import {
   Search,
   Stethoscope,
   Sun,
+  UserCog,
   Users,
   X
 } from "lucide-react";
@@ -37,7 +38,8 @@ const enlacesBase: Array<{
   { nombre: "Dashboard", href: "/dashboard", icono: Home, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] },
   { nombre: "Clientes", href: "/dashboard/clientes", icono: Users, roles: ["ADMIN", "SECRETARIA"] },
   { nombre: "Mascotas", href: "/dashboard/mascotas", icono: PawPrint, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] },
-  { nombre: "Citas", href: "/dashboard/citas", icono: CalendarDays, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] }
+  { nombre: "Citas", href: "/dashboard/citas", icono: CalendarDays, roles: ["ADMIN", "SECRETARIA", "VETERINARIO"] },
+  { nombre: "Staff", href: "/dashboard/staff", icono: UserCog, roles: ["ADMIN"] }
 ];
 
 type DashboardShellProps = {
