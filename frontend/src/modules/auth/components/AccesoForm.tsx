@@ -68,7 +68,7 @@ export function AccesoForm() {
         />
         <PasswordInput error={errores.contrasena} label="Contrasena" name="contrasena" placeholder="Tu contrasena" />
         {errores.general ? <p className="text-sm font-medium text-red-600">{errores.general}</p> : null}
-        <Button className="w-full" type="submit">
+        <Button className="w-full" loading={cargando} type="submit">
           Ingresar
         </Button>
       </form>

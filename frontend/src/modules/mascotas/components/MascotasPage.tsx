@@ -5,8 +5,9 @@ import { Check, Eye, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-rea
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { TableSkeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import { HistoriaClinicaTimeline } from "@/modules/historias-clinicas/components/HistoriaClinicaTimeline";
 import { listarClientes, type Cliente } from "@/services/clientes";
@@ -281,22 +282,13 @@ function MascotasTable({
   verDetalle: (mascota: Mascota) => void;
 }) {
   if (cargando) {
-    return (
-      <div className="rounded-md border border-borde bg-superficie p-4">
-        <div className="space-y-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-12 w-full" />
-          ))}
-        </div>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   if (!mascotas.length) {
     return (
-      <div className="rounded-md border border-borde bg-superficie p-8 text-center">
-        <h3 className="text-lg font-bold">Sin mascotas</h3>
-        <p className="mt-2 text-sm text-texto/60">Ajusta la busqueda o registra la primera mascota.</p>
+      <div className="rounded-md border border-borde bg-superficie p-4">
+        <EmptyState titulo="Sin mascotas" descripcion="Ajusta la busqueda o registra la primera mascota." />
       </div>
     );
   }
@@ -354,9 +346,9 @@ function MascotasTable({
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{EMOJIS_ESPECIE[mascota.especie] || "🐾"}</span>
-                <div>
+                <div className="min-w-0">
                   <h3 className="font-bold">{mascota.nombre}</h3>
-                  <p className="text-xs text-texto/60">
+                  <p className="break-words text-xs text-texto/60">
                     {mascota.especie} {mascota.raza ? `• ${mascota.raza}` : ""}
                   </p>
                 </div>
@@ -685,8 +677,8 @@ function MascotaModal({
           <Button type="button" variant="ghost" onClick={cerrar}>
             Cancelar
           </Button>
-          <Button disabled={guardando} type="submit">
-            {guardando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+          <Button loading={guardando} type="submit">
+            {!guardando ? <Check className="h-4 w-4" /> : null}
             Guardar
           </Button>
         </div>
@@ -756,7 +748,7 @@ function ToastView({ toast }: { toast?: Toast }) {
       {toast ? (
         <motion.div
           className={cn(
-            "fixed right-4 top-4 z-50 rounded-md px-4 py-3 text-sm font-semibold text-white shadow-lg",
+            "fixed right-4 top-4 z-50 max-w-[calc(100vw-2rem)] rounded-md px-4 py-3 text-sm font-semibold text-white shadow-lg",
             toast.tipo === "exito" ? "bg-exito" : "bg-red-600"
           )}
           initial={{ opacity: 0, y: -12 }}

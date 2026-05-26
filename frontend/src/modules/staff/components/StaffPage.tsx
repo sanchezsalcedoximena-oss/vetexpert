@@ -2,12 +2,13 @@
 
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Eye, Loader2, Pencil, Plus, Power, PowerOff, Search, ShieldAlert, X } from "lucide-react";
+import { Check, Eye, Pencil, Plus, Power, PowerOff, Search, ShieldAlert, X } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { TableSkeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import {
   activarStaff,
@@ -254,22 +255,13 @@ function StaffTable({
   verDetalle: (staff: Staff) => void;
 }) {
   if (cargando) {
-    return (
-      <div className="rounded-md border border-borde bg-superficie p-4">
-        <div className="space-y-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-12 w-full" />
-          ))}
-        </div>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   if (!staff.length) {
     return (
-      <div className="rounded-md border border-borde bg-superficie p-8 text-center">
-        <h3 className="text-lg font-bold">Sin staff</h3>
-        <p className="mt-2 text-sm text-texto/60">Ajusta la busqueda o crea el primer usuario interno.</p>
+      <div className="rounded-md border border-borde bg-superficie p-4">
+        <EmptyState titulo="Sin staff" descripcion="Ajusta la busqueda o crea el primer usuario interno." />
       </div>
     );
   }
@@ -295,7 +287,7 @@ function StaffTable({
                   <p className="font-bold">
                     {registro.nombres} {registro.apellidos}
                   </p>
-                  <p className="text-xs text-texto/55">{registro.correo}</p>
+                  <p className="max-w-[320px] break-words text-xs text-texto/55">{registro.correo}</p>
                 </td>
                 <td className="px-4 py-3">
                   <RolBadge rol={registro.rol} />
@@ -509,8 +501,8 @@ function StaffModal({
           <Button type="button" variant="ghost" onClick={cerrar}>
             Cancelar
           </Button>
-          <Button disabled={guardando} type="submit">
-            {guardando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+          <Button loading={guardando} type="submit">
+            {!guardando ? <Check className="h-4 w-4" /> : null}
             Guardar
           </Button>
         </div>

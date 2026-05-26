@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Loader2, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
@@ -125,8 +125,8 @@ export function HistoriaClinicaModal({ cerrar, citaId, guardado, historia, modo 
           <Button type="button" variant="ghost" onClick={cerrar}>
             Cancelar
           </Button>
-          <Button disabled={guardando} type="submit">
-            {guardando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+          <Button loading={guardando} type="submit">
+            {!guardando ? <Check className="h-4 w-4" /> : null}
             Guardar
           </Button>
         </div>

@@ -1,12 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Check, Eye, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { Check, Eye, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { TableSkeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import {
   actualizarCliente,
@@ -200,22 +201,13 @@ function ClientesTable({
   verDetalle: (cliente: Cliente) => void;
 }) {
   if (cargando) {
-    return (
-      <div className="rounded-md border border-borde bg-superficie p-4">
-        <div className="space-y-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-12 w-full" />
-          ))}
-        </div>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   if (!clientes.length) {
     return (
-      <div className="rounded-md border border-borde bg-superficie p-8 text-center">
-        <h3 className="text-lg font-bold">Sin clientes</h3>
-        <p className="mt-2 text-sm text-texto/60">Ajusta la busqueda o crea el primer cliente.</p>
+      <div className="rounded-md border border-borde bg-superficie p-4">
+        <EmptyState titulo="Sin clientes" descripcion="Ajusta la busqueda o crea el primer cliente administrativo." />
       </div>
     );
   }
@@ -238,7 +230,7 @@ function ClientesTable({
               <tr key={cliente.id} className="border-t border-borde">
                 <td className="px-4 py-3">
                   <p className="font-bold">{cliente.nombres} {cliente.apellidos}</p>
-                  <p className="text-xs text-texto/55">{cliente.correo}</p>
+                  <p className="max-w-[320px] break-words text-xs text-texto/55">{cliente.correo}</p>
                 </td>
                 <td className="px-4 py-3">{cliente.dni}</td>
                 <td className="px-4 py-3">{cliente.celular}</td>
@@ -257,9 +249,9 @@ function ClientesTable({
         {clientes.map((cliente) => (
           <article key={cliente.id} className="rounded-md border border-borde bg-fondo p-4">
             <div className="flex items-start justify-between gap-3">
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-bold">{cliente.nombres} {cliente.apellidos}</h3>
-                <p className="mt-1 text-sm text-texto/60">{cliente.correo}</p>
+                <p className="mt-1 break-words text-sm text-texto/60">{cliente.correo}</p>
               </div>
               <EstadoBadge activo={cliente.activo} />
             </div>
@@ -397,8 +389,8 @@ function ClienteModal({
           <Button type="button" variant="ghost" onClick={cerrar}>
             Cancelar
           </Button>
-          <Button disabled={guardando} type="submit">
-            {guardando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+          <Button loading={guardando} type="submit">
+            {!guardando ? <Check className="h-4 w-4" /> : null}
             Guardar
           </Button>
         </div>
@@ -434,7 +426,7 @@ function DetalleItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border border-borde bg-fondo p-3">
       <p className="text-xs font-bold uppercase text-texto/45">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+      <p className="mt-1 break-words font-semibold">{value}</p>
     </div>
   );
 }
@@ -453,7 +445,7 @@ function ToastView({ toast }: { toast?: Toast }) {
       {toast ? (
         <motion.div
           className={cn(
-            "fixed right-4 top-4 z-50 rounded-md px-4 py-3 text-sm font-semibold text-white shadow-lg",
+            "fixed right-4 top-4 z-50 max-w-[calc(100vw-2rem)] rounded-md px-4 py-3 text-sm font-semibold text-white shadow-lg",
             toast.tipo === "exito" ? "bg-exito" : "bg-red-600"
           )}
           initial={{ opacity: 0, y: -12 }}

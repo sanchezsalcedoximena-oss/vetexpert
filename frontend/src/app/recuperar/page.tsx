@@ -57,7 +57,7 @@ export default function RecuperarPage() {
           type="email"
         />
         {mensaje ? <p className="text-sm font-medium text-exito">{mensaje}</p> : null}
-        <Button className="w-full" type="submit">
+        <Button className="w-full" loading={cargando} type="submit">
           Enviar instrucciones
         </Button>
       </form>

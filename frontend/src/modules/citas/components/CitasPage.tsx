@@ -5,8 +5,9 @@ import { CalendarClock, Check, Eye, FileText, Loader2, Pencil, Plus, Search, Tra
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { TableSkeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import { HistoriaClinicaDetalleDrawer } from "@/modules/historias-clinicas/components/HistoriaClinicaDetalleDrawer";
 import { HistoriaClinicaModal } from "@/modules/historias-clinicas/components/HistoriaClinicaModal";
@@ -356,22 +357,13 @@ function CitasTable({
   verDetalle: (cita: Cita) => void;
 }) {
   if (cargando) {
-    return (
-      <div className="rounded-md border border-borde bg-superficie p-4">
-        <div className="space-y-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-12 w-full" />
-          ))}
-        </div>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   if (!citas.length) {
     return (
-      <div className="rounded-md border border-borde bg-superficie p-8 text-center">
-        <h3 className="text-lg font-bold">Sin citas</h3>
-        <p className="mt-2 text-sm text-texto/60">Ajusta la busqueda o agenda la primera cita.</p>
+      <div className="rounded-md border border-borde bg-superficie p-4">
+        <EmptyState titulo="Sin citas" descripcion="Ajusta la busqueda o agenda la primera cita." />
       </div>
     );
   }
@@ -395,7 +387,7 @@ function CitasTable({
               <tr key={cita.id} className="border-t border-borde">
                 <td className="px-4 py-3">
                   <p className="font-bold">{formatearFecha(cita.fecha)}</p>
-                  <p className="text-xs text-texto/55">{cita.motivo}</p>
+                  <p className="max-w-[260px] break-words text-xs text-texto/55">{cita.motivo}</p>
                 </td>
                 <td className="px-4 py-3">
                   <p className="font-semibold">{cita.mascota.nombre}</p>
@@ -435,7 +427,7 @@ function CitasTable({
         {citas.map((cita) => (
           <article key={cita.id} className="rounded-md border border-borde bg-fondo p-4">
             <div className="flex items-start justify-between gap-3">
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-bold">{cita.mascota.nombre}</h3>
                 <p className="mt-1 text-sm text-texto/60">{formatearFecha(cita.fecha)}</p>
               </div>
@@ -445,7 +437,7 @@ function CitasTable({
               <p><span className="text-texto/50">Dueno</span><br />{cita.cliente.nombres} {cita.cliente.apellidos}</p>
               <p><span className="text-texto/50">Veterinario</span><br />{cita.veterinario.nombres} {cita.veterinario.apellidos}</p>
             </div>
-            <p className="mt-3 text-sm text-texto/70">{cita.motivo}</p>
+            <p className="mt-3 break-words text-sm text-texto/70">{cita.motivo}</p>
             {cita.estado === "COMPLETADA" ? (
               <p className="mt-3">
                 <HistoriaCitaBadge cita={cita} />
@@ -824,8 +816,8 @@ function CitaModal({
           <Button type="button" variant="ghost" onClick={cerrar}>
             Cancelar
           </Button>
-          <Button disabled={guardando} type="submit">
-            {guardando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+          <Button loading={guardando} type="submit">
+            {!guardando ? <Check className="h-4 w-4" /> : null}
             Guardar
           </Button>
         </div>
@@ -960,7 +952,7 @@ function ToastView({ toast }: { toast?: Toast }) {
       {toast ? (
         <motion.div
           className={cn(
-            "fixed right-4 top-4 z-50 rounded-md px-4 py-3 text-sm font-semibold text-white shadow-lg",
+            "fixed right-4 top-4 z-50 max-w-[calc(100vw-2rem)] rounded-md px-4 py-3 text-sm font-semibold text-white shadow-lg",
             toast.tipo === "exito" ? "bg-exito" : "bg-red-600"
           )}
           initial={{ opacity: 0, y: -12 }}
