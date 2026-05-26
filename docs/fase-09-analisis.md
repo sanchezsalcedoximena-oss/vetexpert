@@ -430,7 +430,7 @@ Comportamiento final obligatorio:
 * no crear `Usuario`
 * no iniciar sesion
 * no guardar datos en Prisma
-* abrir WhatsApp con `https://api.whatsapp.com/send/?phone=51946223649&text=`
+* abrir WhatsApp con `https://api.whatsapp.com/send/?phone=51987551480&text=`
 
 El texto enviado a WhatsApp debe construirse automaticamente con los campos del formulario:
 
@@ -445,7 +445,7 @@ La URL debe serializar y codificar correctamente el contenido usando codificacio
 Formato conceptual del destino:
 
 ```text
-https://api.whatsapp.com/send/?phone=51946223649&text={mensajeCodificado}
+https://api.whatsapp.com/send/?phone=51987551480&text={mensajeCodificado}
 ```
 
 Formato conceptual del mensaje:

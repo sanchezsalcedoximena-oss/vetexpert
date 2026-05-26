@@ -243,7 +243,7 @@ No hay endpoint backend activo para contacto publico en el contrato actual.
 El formulario publico del frontend construye una URL de WhatsApp:
 
 ```text
-https://api.whatsapp.com/send/?phone=51946223649&text={mensajeCodificado}
+https://api.whatsapp.com/send/?phone=51987551480&text={mensajeCodificado}
 ```
 
 Reglas actuales:

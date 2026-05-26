@@ -202,7 +202,7 @@ Implementado:
 
 - `ContactForm` valida campos en frontend.
 - Construye URL de WhatsApp con `encodeURIComponent`.
-- Abre `https://api.whatsapp.com/send/?phone=51946223649&text=`.
+- Abre `https://api.whatsapp.com/send/?phone=51987551480&text=`.
 - No llama a backend.
 - No usa Prisma.
 - No crea cliente ni usuario.
