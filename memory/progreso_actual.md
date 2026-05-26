@@ -95,6 +95,7 @@ Implementado:
 - Landing publica funcional.
 - Frontend conectado al backend.
 - Dashboard protegido.
+- Dashboard dinamico con metricas reales.
 - Sidebar moderna responsive.
 - Dark mode.
 - Gestion de clientes en `/dashboard/clientes`.
@@ -200,6 +201,12 @@ Implementado:
 - Logout funcional.
 - Navegacion limitada a `ADMIN`, `SECRETARIA`, `VETERINARIO`.
 - Enlace `Staff` visible solo para `ADMIN`.
+- Dashboard dinamico consumiendo `GET /api/dashboard/resumen`.
+- Cards con metricas reales.
+- Proximas citas.
+- Barras simples para citas por estado y mascotas por especie.
+- `staffPorRol` visible solo para `ADMIN`.
+- Vista diferenciada por rol.
 
 No hay navegacion ni permisos para `CLIENTE`.
 
@@ -473,6 +480,10 @@ Usuarios:
 - `GET /api/usuarios/estado`
 - `GET /api/usuarios/veterinarios`
 
+Dashboard:
+
+- `GET /api/dashboard/resumen`
+
 Staff:
 
 - `GET /api/staff`
@@ -558,10 +569,17 @@ Completado:
 - Fase 11.3 - Formularios, modales y drawers.
 - Fase 11.4 - Responsive y dark mode.
 - Fase 11.5 - Limpieza operativa y cierre documental.
+- Fase 12.1 - Contrato y alcance dashboard dinamico.
+- Fase 12.2 - Backend dashboard resumen.
+- Fase 12.3 - Service frontend dashboard tipado.
+- Fase 12.4 - UI de cards dinamicas.
+- Fase 12.5 - Listas operativas.
+- Fase 12.6 - Graficos simples.
+- Fase 12.7 - Verificacion y cierre documental.
 
 Proxima fase funcional:
 
-- Fase 12 - Dashboard dinamico.
+- Fase 13 - Reportes.
 
 Estado Fase 10:
 
@@ -579,11 +597,23 @@ Estado Fase 11:
 - Consolido mejoras UX/UI, responsive, dark mode, loading states, empty states, validaciones frontend y accesibilidad basica.
 - Typecheck frontend pasa.
 
+Estado Fase 12:
+
+- Implementada y cerrada.
+- Documentacion final: `docs/fase-12-implementacion.md`.
+- Endpoint agregado: `GET /api/dashboard/resumen`.
+- Dashboard dinamico real en `/dashboard`.
+- Metricas por rol para `ADMIN`, `SECRETARIA` y `VETERINARIO`.
+- `staffPorRol` solo visible para `ADMIN`.
+- Graficos simples sin librerias nuevas.
+- No requirio migraciones Prisma.
+- Typecheck frontend pasa.
+- Typecheck backend pasa.
+
 ---
 
 ## Fases futuras
 
-- Fase 12 - Dashboard dinamico.
 - Fase 13 - Reportes.
 - Fase 14 - Configuracion.
 - Fase 15 - Mantenimiento futuro.
@@ -626,7 +656,7 @@ Compatibilidad preservada:
 
 Siguiente paso recomendado:
 
-- Avanzar a Fase 12 con dashboard dinamico, manteniendo intacta la integracion staff/citas.
+- Avanzar a Fase 13 con reportes, manteniendo separado el dashboard operativo de los reportes historicos.
 
 ---
 
@@ -663,4 +693,47 @@ Compatibilidad preservada:
 
 Siguiente fase real:
 
-- Fase 12 - Dashboard dinamico.
+- Fase 13 - Reportes.
+
+---
+
+## Estado Fase 12 cerrada
+
+Fase 12 queda oficialmente cerrada como dashboard dinamico administrativo.
+
+Implementado:
+
+- `DashboardModule` backend.
+- `GET /api/dashboard/resumen`.
+- DTO `ResumenDashboardDto`.
+- Service frontend `frontend/src/services/dashboard.ts`.
+- Vista dinamica `/dashboard`.
+- `DashboardOverview`.
+- `DashboardMetricCard`.
+- `DashboardQuickActions`.
+- `UpcomingAppointments`.
+- `DashboardChartCard`.
+- `DashboardSectionSkeleton`.
+- Metricas reales: citas hoy, pendientes, confirmadas, completadas, clientes activos, mascotas activas e historias abiertas.
+- Proximas citas.
+- Citas por estado.
+- Mascotas por especie.
+- Staff por rol solo para `ADMIN`.
+
+Compatibilidad preservada:
+
+- Arquitectura staff-only.
+- `Usuario` staff autenticable.
+- `Cliente` administrativo no autenticable.
+- Auth actual.
+- Citas.
+- Historias clinicas.
+- Mascotas.
+- Staff CRUD.
+- `GET /api/usuarios/veterinarios`.
+- Selector controlado de veterinarios.
+- Prisma schema y migraciones.
+
+Siguiente fase real:
+
+- Fase 13 - Reportes.

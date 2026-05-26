@@ -65,7 +65,7 @@ Los clientes existen solo como registros administrativos internos. Representan d
 
 ## Estado actual
 
-Fase 11 implementada y cerrada.
+Fase 12 implementada y cerrada.
 
 Estado real:
 
@@ -81,6 +81,8 @@ Estado real:
 - Migracion existente: `database/schema/migrations/20260526000000_fase_09_staff_only`.
 - Fase 10 implemento gestion administrativa de staff.
 - Fase 11 consolido mejoras UX/UI, responsive, dark mode, loading states, empty states, validaciones frontend y accesibilidad basica.
+- Fase 12 implemento dashboard dinamico administrativo con endpoint agregado `GET /api/dashboard/resumen`.
+- El dashboard muestra metricas reales, proximas citas, distribuciones por estado/especie y staff por rol solo para `ADMIN`.
 
 ---
 
@@ -170,7 +172,7 @@ Base de datos:
 
 ---
 
-## Estado Fase 10 y Fase 11
+## Estado Fase 10, Fase 11 y Fase 12
 
 Fase 10 esta implementada y cerrada:
 
@@ -194,6 +196,16 @@ Fase 11 esta implementada y cerrada:
 - Responsive y dark mode refinados.
 - Validaciones frontend mejoradas.
 
+Fase 12 esta implementada y cerrada:
+
+- Dashboard dinamico en `/dashboard`.
+- Endpoint agregado `GET /api/dashboard/resumen`.
+- Metricas reales por rol.
+- `staffPorRol` visible solo para `ADMIN`.
+- Graficos simples con CSS/Tailwind.
+- Sin librerias nuevas de charts.
+- Sin cambios Prisma ni migraciones.
+
 Siguiente fase real:
 
-- Fase 12 - Dashboard dinamico.
+- Fase 13 - Reportes.

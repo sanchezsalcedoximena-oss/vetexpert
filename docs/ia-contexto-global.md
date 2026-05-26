@@ -98,6 +98,7 @@ Completado:
 - Fase 09 Reestructuracion staff-only.
 - Fase 10 Gestion administrativa de staff.
 - Fase 11 UX/UI y limpieza operativa.
+- Fase 12 Dashboard dinamico administrativo.
 
 Fase 09 dejo implementado:
 
@@ -129,26 +130,27 @@ Fase 11:
 - Analisis: `docs/fase-11-analisis.md`.
 - Resultado implementado: `docs/fase-11-implementacion.md`.
 
+Fase 12:
+
+- Analisis: `docs/fase-12-analisis.md`.
+- Resultado implementado: `docs/fase-12-implementacion.md`.
+
 ---
 
 ## Proxima fase
 
-Fase 12 - Dashboard dinamico.
+Fase 13 - Reportes.
 
 Objetivo futuro:
 
-- Mostrar metricas operativas reales.
-- Reutilizar endpoints existentes o definir endpoints agregados acotados.
-- Mantener intactos CRUD, citas, historias clinicas y staff.
+- Analizar reportes administrativos y operativos.
+- Definir filtros, permisos y posibles exportaciones.
+- Mantener separado reportes de `GET /api/dashboard/resumen`.
 - Preservar arquitectura staff-only.
 
 ---
 
 ## Fases futuras
-
-Fase 12:
-
-- Dashboard dinamico.
 
 Fase 13:
 
@@ -218,3 +220,12 @@ Staff:
 UX/UI:
 
 - Fase 11 implemento `TableSkeleton`, `EmptyState`, loading buttons, mejoras de accesibilidad en `Input`, wrapping de textos largos, toasts mobile, overflow horizontal controlado, textarea resize vertical, responsive y dark mode refinados.
+
+Dashboard:
+
+- Fase 12 implemento `GET /api/dashboard/resumen`.
+- `/dashboard` consume metricas reales con service tipado.
+- `ADMIN` ve vision global y `staffPorRol`.
+- `SECRETARIA` ve foco operativo.
+- `VETERINARIO` ve datos relacionados a sus citas e historias.
+- Graficos simples con CSS/Tailwind, sin librerias nuevas.
