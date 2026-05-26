@@ -10,6 +10,7 @@ import { MantenimientoModule } from "./mantenimiento/mantenimiento.module";
 import { MascotasModule } from "./mascotas/mascotas.module";
 import { PrismaModule } from "./common/prisma/prisma.module";
 import { ReportesModule } from "./reportes/reportes.module";
+import { StaffModule } from "./staff/staff.module";
 import { UsuariosModule } from "./usuarios/usuarios.module";
 import { VacunasModule } from "./vacunas/vacunas.module";
 
@@ -26,6 +27,7 @@ import { VacunasModule } from "./vacunas/vacunas.module";
     MascotasModule,
     CitasModule,
     HistoriasClinicasModule,
+    StaffModule,
     ConsultasModule,
     VacunasModule,
     ReportesModule,
