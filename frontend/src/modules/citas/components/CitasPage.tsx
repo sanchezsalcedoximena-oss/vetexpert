@@ -23,6 +23,7 @@ import {
 } from "@/services/citas";
 import { obtenerHistoriaClinica, type HistoriaClinica } from "@/services/historias-clinicas";
 import { listarMascotas, type Mascota } from "@/services/mascotas";
+import { listarVeterinarios, type Veterinario } from "@/services/usuarios";
 
 const estadosCita: EstadoCita[] = ["PENDIENTE", "CONFIRMADA", "COMPLETADA", "CANCELADA"];
 
@@ -82,15 +83,16 @@ export function CitasPage() {
   const [detalleHistoria, setDetalleHistoria] = useState<HistoriaClinica>();
   const [toast, setToast] = useState<Toast>();
   const [usuario, setUsuario] = useState<UsuarioSesion>();
+  const [veterinarios, setVeterinarios] = useState<VeterinarioOption[]>([]);
   const [historiaCargandoId, setHistoriaCargandoId] = useState<string>();
 
   const busquedaNormalizada = useMemo(() => busqueda.trim(), [busqueda]);
-  const veterinarios = useMemo(() => obtenerVeterinariosDesdeCitas(citas, usuario), [citas, usuario]);
   const puedeGestionar = usuario?.rol === "ADMIN" || usuario?.rol === "SECRETARIA";
   const puedeCrearHistoria = usuario?.rol === "ADMIN" || usuario?.rol === "VETERINARIO";
 
   useEffect(() => {
     setUsuario(obtenerUsuarioSesion());
+    void cargarVeterinarios();
   }, []);
 
   useEffect(() => {
@@ -128,6 +130,15 @@ export function CitasPage() {
       setToast({ tipo: "error", mensaje: "No pudimos cargar las citas." });
     } finally {
       setCargando(false);
+    }
+  }
+
+  async function cargarVeterinarios() {
+    try {
+      const respuesta = await listarVeterinarios();
+      setVeterinarios(mapearVeterinarios(respuesta));
+    } catch {
+      setToast({ tipo: "error", mensaje: "No pudimos cargar los veterinarios." });
     }
   }
 
@@ -965,26 +976,14 @@ function ToastView({ toast }: { toast?: Toast }) {
   );
 }
 
-function obtenerVeterinariosDesdeCitas(citas: Cita[], usuario?: UsuarioSesion): VeterinarioOption[] {
-  const mapa = new Map<string, VeterinarioOption>();
-
-  if (usuario?.rol === "VETERINARIO") {
-    mapa.set(usuario.id, {
-      id: usuario.id,
-      nombre: `${usuario.nombres} ${usuario.apellidos}`,
-      correo: usuario.correo
-    });
-  }
-
-  citas.forEach((cita) => {
-    mapa.set(cita.veterinarioId, {
-      id: cita.veterinarioId,
-      nombre: `${cita.veterinario.nombres} ${cita.veterinario.apellidos}`,
-      correo: cita.veterinario.correo
-    });
-  });
-
-  return Array.from(mapa.values()).sort((a, b) => a.nombre.localeCompare(b.nombre));
+function mapearVeterinarios(veterinarios: Veterinario[]): VeterinarioOption[] {
+  return veterinarios
+    .map((veterinario) => ({
+      id: veterinario.id,
+      nombre: `${veterinario.nombres} ${veterinario.apellidos}`,
+      correo: veterinario.correo
+    }))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
 function formatearEstado(estado: EstadoCita) {
