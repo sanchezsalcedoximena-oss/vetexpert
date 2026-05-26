@@ -7,6 +7,7 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "build": "nest build",
+    "postinstall": "npx prisma generate --schema ../database/schema/schema.prisma",
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate --schema ../database/schema/schema.prisma",
